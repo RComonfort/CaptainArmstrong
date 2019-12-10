@@ -5,12 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ForwardMovementComponent : MonoBehaviour
 {
-	[SerializeField] private float acceleration = 100f;
-    [SerializeField] private float turnSpeed = 360; 
+	[SerializeField] private float movementForce = 100f;
+    [SerializeField] private float turnSpeed = 72f; 
 	public EMovementEntityType type {get; private set;} = EMovementEntityType.Comet;
 
 	private Rigidbody2D rb;
-	private float anglesToRotate = 0f;
+	private Quaternion targetRot;
 
 	private void Awake() {
 		rb = GetComponent<Rigidbody2D>();
@@ -19,7 +19,7 @@ public class ForwardMovementComponent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        targetRot = transform.rotation;
     }
 
     // Update is called once per frame
@@ -30,29 +30,30 @@ public class ForwardMovementComponent : MonoBehaviour
 
 	public void AddRotationAngles(float angles)
 	{
-		anglesToRotate = angles;
+		targetRot *= Quaternion.Euler(Vector3.forward * -angles);
+	}
+
+	public void CancelRotation()
+	{
+		targetRot = transform.rotation;
 	}
 
 	private void FixedUpdate() {
 		
-		//Rotate towards dir
-		if (!Mathf.Approximately(anglesToRotate, 0f))
+		//Rotate only if the current rot and target rot are different enough
+		float theta = Quaternion.Angle(transform.rotation, targetRot);
+		if (!Mathf.Approximately(theta, 0f))
 		{
+			//The angles to rotate this frame
 			float angleDelta = turnSpeed * Time.fixedDeltaTime;
 
-			anglesToRotate = Mathf.Sign(anglesToRotate) * Mathf.Abs(anglesToRotate) - angleDelta;
-
-			Quaternion targetRot = Quaternion.AngleAxis(anglesToRotate, Vector3.forward);
-        	Quaternion newRot = Quaternion.RotateTowards(targetRot, transform.rotation, angleDelta);
+			float angleAlpha = angleDelta / theta;
+			Quaternion newRot = Quaternion.Slerp(transform.rotation, targetRot, angleAlpha);
 
         	rb.MoveRotation(newRot);
 		}
 			
         //Move forwards
-        rb.AddForce(transform.right * acceleration * Time.fixedDeltaTime);
-	}
-
-	private void OnTriggerEnter2D(Collider2D other) {
-		
+        rb.AddForce(transform.right * movementForce * Time.fixedDeltaTime);
 	}
 }
