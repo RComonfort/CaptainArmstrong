@@ -5,9 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ForwardMovementComponent : MonoBehaviour
 {
-	[SerializeField] private float acceleration = 10f;
+	[SerializeField] private float acceleration = 100f;
     [SerializeField] private float turnSpeed = 360; 
-	
+	public EMovementEntityType type {get; private set;} = EMovementEntityType.Comet;
+
 	private Rigidbody2D rb;
 	private float anglesToRotate = 0f;
 
@@ -48,7 +49,7 @@ public class ForwardMovementComponent : MonoBehaviour
 		}
 			
         //Move forwards
-        rb.AddForce(transform.forward * acceleration * Time.fixedDeltaTime);
+        rb.AddForce(transform.right * acceleration * Time.fixedDeltaTime);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
