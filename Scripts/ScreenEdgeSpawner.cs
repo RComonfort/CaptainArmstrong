@@ -10,8 +10,7 @@ public class ScreenEdgeSpawner : MonoBehaviour
 	[SerializeField] private float delayBetweenSpawns = .3f;	//The delay between each object spawn within a wave
 	[SerializeField] private int spawnAmount = 3;				//Amount of objects to spawn per wave
 	[SerializeField] private float firstWaveDelay = 1f;			//Delay before the first wave
-	
-	
+		
 	private Camera mainCam;
 
     // Start is called before the first frame update
@@ -36,15 +35,16 @@ public class ScreenEdgeSpawner : MonoBehaviour
 			Vector3 spawnPos = PickRandomSpawnPos();
 
 			Vector3 screenCenter = mainCam.ScreenToWorldPoint(new Vector3(Screen.width/2f, Screen.height/2f));
+			screenCenter.z = 0;
 			Vector3 dir = (screenCenter - spawnPos).normalized;
 
 			//Spawn objects looking at center of screen
 			Quaternion spawnRot = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, dir));
-			
 
 			//Create obj and offset its rotation randomly
 			GameObject newObj = Instantiate(prefabToSpawn, spawnPos, spawnRot);
-			newObj.transform.rotation = Quaternion.AngleAxis(Random.Range(-60f, 60f), newObj.transform.right);
+			float zAngle = newObj.transform.rotation.eulerAngles.z;
+			newObj.transform.rotation = Quaternion.AngleAxis(zAngle + Random.Range(-50f, 50f), Vector3.forward);
 
 			//Move away obj to hide its spawn off-screen
 			Collider2D collider = newObj.GetComponent<Collider2D>();

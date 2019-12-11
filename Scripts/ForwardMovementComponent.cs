@@ -51,8 +51,7 @@ public class ForwardMovementComponent : MonoBehaviour
 		}
 			
         //Move forwards
-        rb.AddForce(transform.right * movementForce * Time.fixedDeltaTime);
-
-		rb.velocity = rb.velocity.normalized * Mathf.Clamp(rb.velocity.magnitude, 0, maxVelocityMagnitude);
+		if (rb.velocity.magnitude < maxVelocityMagnitude)
+        	rb.AddForce(transform.right * movementForce * Time.fixedDeltaTime);
 	}
 }

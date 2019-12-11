@@ -10,3 +10,9 @@ public enum EPlayerState
 	OnSpaceShip,
 	Jumping
 }
+
+public enum EDestroyPolicy
+{
+	ByTime,
+	ByLeavingScreen
+}
