@@ -5,9 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ForwardMovementComponent : MonoBehaviour
 {
+	[Header("Movement")]
 	[SerializeField] private float movementForce = 100f;
+	[SerializeField] private float maxVelocityMagnitude = 5000;
     [SerializeField] private float turnSpeed = 72f; 
-	public EMovementEntityType type {get; private set;} = EMovementEntityType.Comet;
+
+	[Header("Movement Component")]
+	[SerializeField] private EMovementEntityType _type = EMovementEntityType.Comet;
+	public EMovementEntityType type {get {return _type;}}
 
 	private Rigidbody2D rb;
 	private Quaternion targetRot;
@@ -18,12 +23,6 @@ public class ForwardMovementComponent : MonoBehaviour
 		rb = GetComponent<Rigidbody2D>();
 
         targetRot = transform.rotation;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
 	public void AddRotationAngles(float angles)
@@ -53,5 +52,7 @@ public class ForwardMovementComponent : MonoBehaviour
 			
         //Move forwards
         rb.AddForce(transform.right * movementForce * Time.fixedDeltaTime);
+
+		rb.velocity = rb.velocity.normalized * Mathf.Clamp(rb.velocity.magnitude, 0, maxVelocityMagnitude);
 	}
 }

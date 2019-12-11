@@ -23,6 +23,7 @@ public class Player : MonoBehaviour, ITriggerListener
 	[HideInInspector] public EPlayerState playerState;
 	private HashSet<Transform> nearbyComets;
 	private Transform nearestComet;
+	private CircleCollider2D DetectionTrigger;
 
 
     // Start is called before the first frame update
@@ -34,8 +35,8 @@ public class Player : MonoBehaviour, ITriggerListener
 
 		nearbyComets = new HashSet<Transform>();
 		
-		CircleCollider2D trigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
-		trigger.radius = cometJumpRadius;
+		DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
+		DetectionTrigger.radius = cometJumpRadius;
     }
 
     // Update is called once per frame
@@ -150,11 +151,11 @@ public class Player : MonoBehaviour, ITriggerListener
 	{
 		//Remove new ridden comet from nearby comets
 		nearbyComets.Remove(cometTarget);
+		nearestComet = null;
 
-		Vector3 cometPos = cometTarget.position;
-		while (transform.position != cometPos)
+		while (transform.position != cometTarget.position)
 		{
-			transform.position = Vector3.MoveTowards(transform.position, cometPos, jumpingSpeed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards(transform.position, cometTarget.position, jumpingSpeed * Time.deltaTime);
 			yield return null;
 		}
 
