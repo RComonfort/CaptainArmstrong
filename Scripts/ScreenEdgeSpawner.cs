@@ -40,8 +40,11 @@ public class ScreenEdgeSpawner : MonoBehaviour
 
 			//Spawn objects looking at center of screen
 			Quaternion spawnRot = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, dir));
+			
 
+			//Create obj and offset its rotation randomly
 			GameObject newObj = Instantiate(prefabToSpawn, spawnPos, spawnRot);
+			newObj.transform.rotation = Quaternion.AngleAxis(Random.Range(-60f, 60f), newObj.transform.right);
 
 			//Move away obj to hide its spawn off-screen
 			Collider2D collider = newObj.GetComponent<Collider2D>();
@@ -51,7 +54,7 @@ public class ScreenEdgeSpawner : MonoBehaviour
 				bounds.z = 0;
 
 				//push away from screen center by the hypothenuse of the obj's bounds on X and Y
-				float magnitude = bounds.magnitude * 1.2f;
+				float magnitude = bounds.magnitude * 3f;
 				newObj.transform.Translate(-dir * magnitude, Space.World);
 			}
 
