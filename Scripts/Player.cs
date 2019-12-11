@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, ITriggerListener
+public class Player : MonoBehaviour, ITriggerListener, IDamageable
 {
 	[Header("Player")]
 	[SerializeField] public bool allowMovementInput = true;
@@ -14,9 +14,14 @@ public class Player : MonoBehaviour, ITriggerListener
 	[SerializeField] private float cometJumpRadius = 10;	//Max radius at which the player can jump to other comet
 	[SerializeField] private float jumpingSpeed = 10;		//The speed (in units/sec) at which the player jumps from comet to comet
 
+	[Header("Health")]
+	[SerializeField] private int maxHealth = 3;
+	
+
 	private float lastAngleStep = 0f;			//When was the last angle delta added
 	private float angleStepCD = 0.05f;			//Time in secs that must be waited before rotating again
 	private bool bIsRotatingCW, bIsRotatingCCW;
+	private int hp;
 
 	private ForwardMovementComponent movementComp; //Movement component from the ship or comet that the player is on
 	private Transform targetJumpingPosition; 
@@ -40,6 +45,8 @@ public class Player : MonoBehaviour, ITriggerListener
 
 		initialPosOffset = transform.localPosition;
 		initialRotOffset = transform.localRotation;
+
+		hp = maxHealth;
     }
 
     // Update is called once per frame
@@ -202,5 +209,19 @@ public class Player : MonoBehaviour, ITriggerListener
 	{
 
 	}
+#endregion
+
+#region DAMAGEABLE
+
+	public void TakeDamage(int amount)
+	{
+
+	}
+
+	public void Die()
+	{
+
+	}
+
 #endregion
 }
