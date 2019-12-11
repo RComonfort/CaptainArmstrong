@@ -23,8 +23,6 @@ public class Player : MonoBehaviour, ITriggerListener
 	[HideInInspector] public EPlayerState playerState;
 	private HashSet<Transform> nearbyComets;
 	private Transform nearestComet;
-	private CircleCollider2D DetectionTrigger;
-
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +33,7 @@ public class Player : MonoBehaviour, ITriggerListener
 
 		nearbyComets = new HashSet<Transform>();
 		
-		DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
+		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
     }
 

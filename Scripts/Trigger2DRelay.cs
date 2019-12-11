@@ -15,7 +15,7 @@ public class Trigger2DRelay : MonoBehaviour
 	[HideInInspector] public Collider2D triggerCollider {get; private set;}
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 		listener = listenerReference as ITriggerListener;
 
@@ -55,7 +55,7 @@ public class Trigger2DRelay : MonoBehaviour
 	{
 		if (ignoreAncestor && HaveSharedAncester(other, this))
 			return;
-			
+
 		listener?.OnObjectExitedTrigger(this, other);	
 	}
 }
