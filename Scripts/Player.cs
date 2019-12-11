@@ -16,12 +16,16 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	[Header("Health")]
 	[SerializeField] private int maxHealth = 3;
+
+	[Header("Ship Repairing")]
+	[SerializeField] private RequiredComponent[] requiredComponents;
 	
 
 	private float lastAngleStep = 0f;			//When was the last angle delta added
 	private float angleStepCD = 0.05f;			//Time in secs that must be waited before rotating again
 	private bool bIsRotatingCW, bIsRotatingCCW;
 	private int hp;
+	public bool canBeDamaged = true;
 
 	private ForwardMovementComponent movementComp; //Movement component from the ship or comet that the player is on
 	private Transform targetJumpingPosition; 
@@ -30,6 +34,8 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private Transform nearestComet;
 	private Vector3 initialPosOffset;
 	private Quaternion initialRotOffset;
+	private Dictionary<EShipComponent, int> obtainedComps;
+	private Dictionary<EShipComponent, int> neededComps;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +53,15 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		initialRotOffset = transform.localRotation;
 
 		hp = maxHealth;
+
+		//Ship repaired init
+		neededComps = new Dictionary<EShipComponent, int>();
+		obtainedComps = new Dictionary<EShipComponent, int>();
+		for (int i = 0; i < requiredComponents.Length; i++)
+		{
+			neededComps.Add(requiredComponents[i].component, requiredComponents[i].amount);
+			obtainedComps.Add(requiredComponents[i].component, 0);
+		}
     }
 
     // Update is called once per frame
@@ -184,6 +199,47 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 	}
 
+	private bool RemoveFractionOfObtainedComps()
+	{
+		int compsToRemove = TotalObtainedComps() / maxHealth;
+		
+		if (compsToRemove == 0)
+			return false;
+
+		int leftToRemove = compsToRemove;
+		for (int i = 0; i < requiredComponents.Length && leftToRemove > 0; i++)
+		{
+			int removeFromComp = leftToRemove / (requiredComponents.Length - i);
+
+			EShipComponent comp = requiredComponents[i].component;
+			removeFromComp = removeFromComp > obtainedComps[comp] ? obtainedComps[comp] : removeFromComp;
+			obtainedComps[comp] -= removeFromComp;
+
+			leftToRemove -= removeFromComp;
+
+			StartCoroutine(DropGrabbedComponents(comp, removeFromComp));
+		}
+
+		return true;
+	}
+
+	private IEnumerator DropGrabbedComponents(EShipComponent component, int amount)
+	{
+		yield return null;
+	}
+
+	public int TotalObtainedComps()
+	{
+		Dictionary<EShipComponent, int>.Enumerator e = obtainedComps.GetEnumerator();
+
+		int total = 0;
+		while (e.MoveNext()) { 
+            total += e.Current.Value;
+        } 
+
+		return total;
+	}
+
 #region TRIGGER_LISTENER
 
 	public void OnObjectEnteredTrigger(Trigger2DRelay triggerObj, Collider2D other)
@@ -215,7 +271,13 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	public void TakeDamage(int amount)
 	{
+		if (!canBeDamaged || RemoveFractionOfObtainedComps())
+			return;
+		
+		hp -= amount;
 
+		if (hp <= 0)
+			Die();
 	}
 
 	public void Die()
@@ -224,4 +286,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	}
 
 #endregion
+}
+
+[System.Serializable]
+public class RequiredComponent
+{
+	public EShipComponent component;
+	public int amount;
 }
