@@ -23,6 +23,8 @@ public class Player : MonoBehaviour, ITriggerListener
 	[HideInInspector] public EPlayerState playerState;
 	private HashSet<Transform> nearbyComets;
 	private Transform nearestComet;
+	private Vector3 initialPosOffset;
+	private Quaternion initialRotOffset;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +37,9 @@ public class Player : MonoBehaviour, ITriggerListener
 		
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
+
+		initialPosOffset = transform.localPosition;
+		initialRotOffset = transform.localRotation;
     }
 
     // Update is called once per frame
@@ -47,7 +52,6 @@ public class Player : MonoBehaviour, ITriggerListener
 
 		//Update nearest comet
 		CometTrackingUpdate();
-		
     }
 
 	private void CometTrackingUpdate()
@@ -62,7 +66,6 @@ public class Player : MonoBehaviour, ITriggerListener
 		float minSqrDist = float.MaxValue;
 		HashSet<Transform>.Enumerator em = nearbyComets.GetEnumerator(); 
 
-		string names = "";
 		while (em.MoveNext()) { 
             float sqrDist = (em.Current.position - transform.position).sqrMagnitude;
 
@@ -71,11 +74,8 @@ public class Player : MonoBehaviour, ITriggerListener
 				minSqrDist = sqrDist;
 				nearestComet = em.Current;
 			}
-
-			names += ", " + em.Current.name;
         } 
-
-		print("[" + names + "], near: " + nearestComet.name);
+		
 	}
 
 	private void MovementInputUpdate()
@@ -161,6 +161,10 @@ public class Player : MonoBehaviour, ITriggerListener
 		movementComp = cometTarget.GetComponent<ForwardMovementComponent>();
 		playerState = EPlayerState.OnComet;
 		transform.SetParent(cometTarget);
+
+		//Apply offsets
+		transform.localPosition = initialPosOffset;
+		transform.localRotation = initialRotOffset;
 	}
 
 	private void OnDrawGizmosSelected() 
@@ -177,6 +181,9 @@ public class Player : MonoBehaviour, ITriggerListener
 
 	public void OnObjectEnteredTrigger(Trigger2DRelay triggerObj, Collider2D other)
 	{
+		if (playerState != EPlayerState.OnComet)
+			return;
+			
 		//Add collided object if it is a comet that is not already considered
 		ForwardMovementComponent movingObj = other.gameObject.GetComponent<ForwardMovementComponent>();
 		if (movingObj && movingObj.type == EMovementEntityType.Comet && !nearbyComets.Contains(movingObj.transform))
