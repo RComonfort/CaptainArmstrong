@@ -12,13 +12,11 @@ public class ForwardMovementComponent : MonoBehaviour
 	private Rigidbody2D rb;
 	private Quaternion targetRot;
 
-	private void Awake() {
-		rb = GetComponent<Rigidbody2D>();
-	}
-
     // Start is called before the first frame update
     void Start()
     {
+		rb = GetComponent<Rigidbody2D>();
+
         targetRot = transform.rotation;
     }
 
