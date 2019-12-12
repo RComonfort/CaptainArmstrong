@@ -26,8 +26,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private float lastAngleStep = 0f;			//When was the last angle delta added
 	private float angleStepCD = 0.05f;			//Time in secs that must be waited before rotating again
 	private bool bIsRotatingCW, bIsRotatingCCW;
-	private int hp;
+	public int hp {get; private set;}
 	public bool canBeDamaged = true;
+
+	public int MaxHealth {get {return maxHealth;}}
 
 	private ForwardMovementComponent movementComp; //Movement component from the ship or comet that the player is on
 	private Transform targetJumpingPosition; 
