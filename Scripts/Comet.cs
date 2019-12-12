@@ -19,14 +19,15 @@ public class Comet : SimpleEnemyUnit, IRideable
 	public void GetsRidden(Player by)
 	{
 		player = by;
-		hitbox.enabled = false;
+		gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
 	}
 
 	public void StopBeingRidden()
 	{
-		hitbox.enabled = true;
 		player = null;
 		CancelRotation();
+
+		Invoke("EnableCollision", 0.2f);
 	}
 
 	public void Rotate(float angle)
@@ -37,5 +38,10 @@ public class Comet : SimpleEnemyUnit, IRideable
 	public void CancelRotation()
 	{
 		movementComponent?.CancelRotation();
+	}
+
+	private void EnableCollision()
+	{
+		gameObject.layer = LayerMask.NameToLayer("Default");
 	}
 }

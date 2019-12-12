@@ -8,35 +8,35 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	[SerializeField] public bool allowMovementInput = true;
 
 	[Header("Rotation")]
-	[SerializeField] private float angleStep = 5f;		//The angles that are rotated with each step
-	
+	[SerializeField] private float angleStep = 5f;      //The angles that are rotated with each step
+
 	[Header("Jumping")]
-	[SerializeField] private float cometJumpRadius = 10;	//Max radius at which the player can jump to other comet
-	[SerializeField] private float jumpingSpeed = 10;		//The speed (in units/sec) at which the player jumps from comet to comet
+	[SerializeField] private float cometJumpRadius = 10;    //Max radius at which the player can jump to other comet
+	[SerializeField] private float jumpingSpeed = 10;       //The speed (in units/sec) at which the player jumps from comet to comet
 
 	[Header("Health")]
 	[SerializeField] private int maxHealth = 3;
 	[SerializeField] private int damageOnContact = 1;
-	
+
 
 	[Header("Ship Repairing")]
 	[SerializeField] private RequiredComponent[] requiredComponents;
-	
 
-	private float lastAngleStep = 0f;			//When was the last angle delta added
-	private float angleStepCD = 0.05f;			//Time in secs that must be waited before rotating again
+
+	private float lastAngleStep = 0f;           //When was the last angle delta added
+	private float angleStepCD = 0.05f;          //Time in secs that must be waited before rotating again
 	private bool bIsRotatingCW, bIsRotatingCCW;
-	public int hp {get; private set;}
+	public int hp { get; private set; }
 	public bool canBeDamaged = true;
 
 	//Accessors
-	public int MaxHealth {get {return maxHealth;}}
-	public RequiredComponent[] RequiredComponents {get {return requiredComponents;}}
-	public Dictionary<EShipComponent, int> ObtainedComps {get {return obtainedComps;}}
-	public Dictionary<EShipComponent, int> NeededComps {get {return neededComps;}}
+	public int MaxHealth { get { return maxHealth; } }
+	public RequiredComponent[] RequiredComponents { get { return requiredComponents; } }
+	public Dictionary<EShipComponent, int> ObtainedComps { get { return obtainedComps; } }
+	public Dictionary<EShipComponent, int> NeededComps { get { return neededComps; } }
 
-	private IRideable riddenObj; 
-	private Transform targetJumpingPosition; 
+	private IRideable riddenObj;
+	private Transform targetJumpingPosition;
 	[HideInInspector] public EPlayerState playerState;
 	private HashSet<Comet> nearbyComets;
 	private Comet nearestComet;
@@ -45,15 +45,17 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private Dictionary<EShipComponent, int> obtainedComps;
 	private Dictionary<EShipComponent, int> neededComps;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	#region MonoBehaviourMethods
+
+	// Start is called before the first frame update
+	void Start()
+	{
 		riddenObj = GetComponentInParent<IRideable>();
 		riddenObj.GetsRidden(this);
 		playerState = EPlayerState.OnComet;
 
 		nearbyComets = new HashSet<Comet>();
-		
+
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
 
@@ -70,11 +72,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			neededComps.Add(requiredComponents[i].component, requiredComponents[i].amount);
 			obtainedComps.Add(requiredComponents[i].component, 0);
 		}
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
+	// Update is called once per frame
+	void Update()
+	{
 		if (allowMovementInput && playerState != EPlayerState.Jumping)
 		{
 			MovementInputUpdate();
@@ -84,14 +86,46 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		CometTrackingUpdate();
 
 		DrawNearestComet();
-    }
+	}
 
-	private void DrawNearestComet()
+	private void OnDrawGizmosSelected()
 	{
-		if (playerState != EPlayerState.OnComet || !nearestComet)
+		//Draw jump radius when selected
+		if (playerState == EPlayerState.OnComet)
+		{
+			Gizmos.color = new Color(1, .92f, .016f, .8f);
+			Gizmos.DrawWireSphere(transform.position, cometJumpRadius);
+		}
+	}
+
+
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		if (playerState == EPlayerState.Dead)
 			return;
 
+		print(gameObject.name + " collided with " + other.gameObject.name);
+
+		//Only deal damage when on comet or spaceship
+		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
+		if (damageableObj != null)
+		{
+			//Ignore the comet we are riding
+			if (playerState == EPlayerState.OnComet && other.transform.root == transform.root)
+				return;
+
+			damageableObj.TakeDamage(damageOnContact);
+		}
+
+		IPickable pickup = other.gameObject.GetComponent<IPickable>();
+		if (pickup != null)
+			pickup.Pickup(this);
 	}
+
+	#endregion
+
+
+	#region CometJumping
 
 	private void CometTrackingUpdate()
 	{
@@ -103,20 +137,77 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 		//Iterate through comets to find closest
 		float minSqrDist = float.MaxValue;
-		HashSet<Comet>.Enumerator em = nearbyComets.GetEnumerator(); 
+		HashSet<Comet>.Enumerator em = nearbyComets.GetEnumerator();
 
-		while (em.MoveNext()) { 
-            float sqrDist = (em.Current.transform.position - transform.position).sqrMagnitude;
+		while (em.MoveNext())
+		{
+			float sqrDist = (em.Current.transform.position - transform.position).sqrMagnitude;
 
 			if (sqrDist < minSqrDist)
 			{
 				minSqrDist = sqrDist;
 				nearestComet = em.Current;
 			}
-        } 
-		
+		}
+
 	}
 
+	private void DrawNearestComet()
+	{
+		if (playerState != EPlayerState.OnComet || !nearestComet)
+			return;
+
+	}
+
+	public void JumpToNearestCommet()
+	{
+		if (playerState != EPlayerState.OnComet || !nearestComet)
+			return;
+
+		riddenObj.CancelRotation();
+
+		//Add ridden comet as nearby comet
+		nearbyComets.Add(riddenObj as Comet);
+
+		//Dettach from comet
+		riddenObj.StopBeingRidden();
+		riddenObj = null;
+		transform.parent = null;
+
+		//Set state to jumping and start jumping process
+		playerState = EPlayerState.Jumping;
+		StartCoroutine(JumpingRoutine(nearestComet));
+	}
+
+	private IEnumerator JumpingRoutine(Comet cometTarget)
+	{
+		//Remove new ridden comet from nearby comets
+		nearbyComets.Remove(cometTarget);
+		nearestComet = null;
+
+		Transform target = cometTarget.transform;
+
+		riddenObj = cometTarget;
+		riddenObj.GetsRidden(this);
+
+		while (Vector3.SqrMagnitude(transform.position - target.position) < .5f)
+		{
+			transform.position = Vector3.MoveTowards(transform.position, target.position, jumpingSpeed * Time.deltaTime);
+			yield return null;
+		}
+
+		//New comet reached, update player state
+		playerState = EPlayerState.OnComet;
+		transform.SetParent(target);
+
+		//Apply offsets
+		transform.localPosition = initialPosOffset;
+		transform.localRotation = initialRotOffset;
+	}
+
+	#endregion
+
+	#region Movement
 	private void MovementInputUpdate()
 	{
 		float action1Input = Input.GetAxisRaw("Action1");
@@ -144,7 +235,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 
 		//Action 2 Do clockwise rotation
-        if (action2Input > 0.2f)
+		if (action2Input > 0.2f)
 		{
 			DoRotationStep(angleStep);
 			bIsRotatingCW = true;
@@ -165,86 +256,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 	}
 
-	public void JumpToNearestCommet()
-	{
-		if (playerState != EPlayerState.OnComet || !nearestComet)
-			return;
+	#endregion
 
-		riddenObj.CancelRotation();
-		
-		//Add ridden comet as nearby comet
-		nearbyComets.Add(riddenObj as Comet);
 
-		//Dettach from comet
-		riddenObj.StopBeingRidden();
-		riddenObj = null;
-		transform.parent = null;
-
-		//Set state to jumping and start jumping process
-		playerState = EPlayerState.Jumping;
-		StartCoroutine(JumpingRoutine(nearestComet));
-	}
-
-	private IEnumerator JumpingRoutine(Comet cometTarget)
-	{
-		//Remove new ridden comet from nearby comets
-		nearbyComets.Remove(cometTarget);
-		nearestComet = null;
-		
-		Transform target = cometTarget.transform;
-
-		while (transform.position != target.position)
-		{
-			transform.position = Vector3.MoveTowards(transform.position, target.position, jumpingSpeed * Time.deltaTime);
-			yield return null;
-		}
-
-		//New comet reached, update player state
-		riddenObj = cometTarget;
-		playerState = EPlayerState.OnComet;
-		transform.SetParent(target);
-
-		//Apply offsets
-		transform.localPosition = initialPosOffset;
-		transform.localRotation = initialRotOffset;
-	}
-
-	private void OnDrawGizmosSelected() 
-	{
-		//Draw jump radius when selected
-		if (playerState == EPlayerState.OnComet)
-		{
-			Gizmos.color = new Color(1, .92f, .016f, .8f);
-			Gizmos.DrawWireSphere(transform.position, cometJumpRadius);
-		}
-	}
-
-	private bool RemoveFractionOfObtainedComps()
-	{
-		int compsToRemove = TotalObtainedComps() / maxHealth;
-		
-		if (compsToRemove == 0)
-			return false;
-
-		int leftToRemove = compsToRemove;
-		for (int i = 0; i < requiredComponents.Length && leftToRemove > 0; i++)
-		{
-			int removeFromComp = leftToRemove / (requiredComponents.Length - i);
-
-			if (removeFromComp == 0)
-				removeFromComp = leftToRemove % (requiredComponents.Length - i);
-
-			EShipComponent comp = requiredComponents[i].component;
-			removeFromComp = removeFromComp > obtainedComps[comp] ? obtainedComps[comp] : removeFromComp;
-			obtainedComps[comp] -= removeFromComp;
-
-			leftToRemove -= removeFromComp;
-
-			StartCoroutine(DropGrabbedComponents(comp, removeFromComp));
-		}
-
-		return true;
-	}
+	#region ShipRepairing
 
 	private IEnumerator DropGrabbedComponents(EShipComponent component, int amount)
 	{
@@ -254,7 +269,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		GameObject template = null;
 		for (int i = 0; i < requiredComponents.Length; i++)
 		{
-			if (requiredComponents[i].component == component)	
+			if (requiredComponents[i].component == component)
 			{
 				template = requiredComponents[i].prefab;
 				break;
@@ -284,7 +299,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 			yield return null;
 		}
-		
+
 	}
 
 	public int TotalObtainedComps()
@@ -292,12 +307,41 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		Dictionary<EShipComponent, int>.Enumerator e = obtainedComps.GetEnumerator();
 
 		int total = 0;
-		while (e.MoveNext()) { 
-            total += e.Current.Value;
-        } 
+		while (e.MoveNext())
+		{
+			total += e.Current.Value;
+		}
 
 		return total;
 	}
+
+	private bool RemoveFractionOfObtainedComps()
+	{
+		int compsToRemove = TotalObtainedComps() / maxHealth;
+
+		if (compsToRemove == 0)
+			return false;
+
+		int leftToRemove = compsToRemove;
+		for (int i = 0; i < requiredComponents.Length && leftToRemove > 0; i++)
+		{
+			int removeFromComp = leftToRemove / (requiredComponents.Length - i);
+
+			if (removeFromComp == 0)
+				removeFromComp = leftToRemove % (requiredComponents.Length - i);
+
+			EShipComponent comp = requiredComponents[i].component;
+			removeFromComp = removeFromComp > obtainedComps[comp] ? obtainedComps[comp] : removeFromComp;
+			obtainedComps[comp] -= removeFromComp;
+
+			leftToRemove -= removeFromComp;
+
+			StartCoroutine(DropGrabbedComponents(comp, removeFromComp));
+		}
+
+		return true;
+	}
+
 
 	//Adds 1 to the type of spaceship component. Returns true if it was added and false if player is already maxed out.
 	public bool AddSpaceshipComponent(EShipComponent type)
@@ -310,31 +354,17 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		return true;
 	}
 
-	private void OnCollisionEnter2D(Collision2D other) {
-		
-		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
 
-		if (damageableObj != null)
-		{
-			//Ignore the comet we are riding
-			if (playerState == EPlayerState.OnComet && other.transform.root == transform.root)
-				return;
+	#endregion
 
-			damageableObj.TakeDamage(damageOnContact);
-		}
 
-		IPickable pickup = other.gameObject.GetComponent<IPickable>();
-		if (pickup != null)
-			pickup.Pickup(this);
-	}
-
-#region TRIGGER_LISTENER
+	#region TRIGGER_LISTENER
 
 	public void OnObjectEnteredTrigger(Trigger2DRelay triggerObj, Collider2D other)
 	{
 		if (playerState != EPlayerState.OnComet)
 			return;
-			
+
 		//Add collided object if it is a comet that is not already considered
 		Comet movingObj = other.gameObject.GetComponent<Comet>();
 		if (movingObj && !nearbyComets.Contains(movingObj))
@@ -353,9 +383,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	{
 
 	}
-#endregion
+	#endregion
 
-#region DAMAGEABLE
+	#region DAMAGEABLE
 
 	public bool TakeDamage(int amount)
 	{
@@ -395,7 +425,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		return true;
 	}
 
-#endregion
+	#endregion
 }
 
 [System.Serializable]

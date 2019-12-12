@@ -52,6 +52,11 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 
 	private void OnCollisionEnter2D(Collision2D other) {
 		
+		if (isDead)
+			return;
+
+		print(gameObject.name + " collided with " + other.gameObject.name);
+
 		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
 
 		if (damageableObj != null)
