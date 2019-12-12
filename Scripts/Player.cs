@@ -29,7 +29,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	public int hp {get; private set;}
 	public bool canBeDamaged = true;
 
+	//Accessors
 	public int MaxHealth {get {return maxHealth;}}
+	public RequiredComponent[] RequiredComponents {get {return requiredComponents;}}
+	public Dictionary<EShipComponent, int> ObtainedComps {get {return obtainedComps;}}
+	public Dictionary<EShipComponent, int> NeededComps {get {return neededComps;}}
 
 	private ForwardMovementComponent movementComp; //Movement component from the ship or comet that the player is on
 	private Transform targetJumpingPosition; 
