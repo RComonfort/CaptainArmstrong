@@ -219,6 +219,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		{
 			int removeFromComp = leftToRemove / (requiredComponents.Length - i);
 
+			if (removeFromComp == 0)
+				removeFromComp = leftToRemove % (requiredComponents.Length - i);
+
 			EShipComponent comp = requiredComponents[i].component;
 			removeFromComp = removeFromComp > obtainedComps[comp] ? obtainedComps[comp] : removeFromComp;
 			obtainedComps[comp] -= removeFromComp;
@@ -284,9 +287,15 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		return total;
 	}
 
-	public void AddSpaceshipComponent(EShipComponent type)
+	//Adds 1 to the type of spaceship component. Returns true if it was added and false if player is already maxed out.
+	public bool AddSpaceshipComponent(EShipComponent type)
 	{
-		obtainedComps[type] = Mathf.Clamp(obtainedComps[type] + 1, 0, neededComps[type]);
+		if (obtainedComps[type] == neededComps[type])
+			return false;
+
+		obtainedComps[type] = obtainedComps[type] + 1;
+
+		return true;
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) {
@@ -336,30 +345,42 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 #region DAMAGEABLE
 
-	public void TakeDamage(int amount)
+	public bool TakeDamage(int amount)
 	{
-		if (!canBeDamaged)
-			return;
+		//If invulnerable or dead, do not take damage
+		if (!canBeDamaged || playerState == EPlayerState.Dead)
+			return false;
 
 		//If cannot drop grabbed components, take damage instead
 		if (!RemoveFractionOfObtainedComps())
 		{
 			hp = Mathf.Clamp(hp - amount, 0, maxHealth);
 
-			if (hp <= 0)
+			if (hp == 0)
 			{
 				Die();
-				return;
+				return true;
 			}
 		}
-		
+
 		//Play hurt animation
 
+		return true;
 	}
 
 	public void Die()
 	{
+		playerState = EPlayerState.Dead;
+	}
 
+	public bool HealDamage(int amount)
+	{
+		if (hp == maxHealth)
+			return false;
+
+		hp = Mathf.Clamp(hp + amount, 0, maxHealth);
+
+		return true;
 	}
 
 #endregion

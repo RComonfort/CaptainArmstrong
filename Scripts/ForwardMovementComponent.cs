@@ -28,7 +28,7 @@ public class ForwardMovementComponent : MonoBehaviour
 
 		if (type == EMovementEntityType.DebrisAdrift)
 		{
-			rb.AddForce(transform.forward * movementForce, ForceMode2D.Impulse);
+			rb.AddForce(transform.right * movementForce * Random.Range(.75f, 1.25f), ForceMode2D.Impulse);
 			rb.AddTorque(torque, ForceMode2D.Impulse);
 		}
     }

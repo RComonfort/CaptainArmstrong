@@ -18,7 +18,7 @@ public class HeartContainer : MonoBehaviour, IPickable
 		Vector3 dir = new Vector3(Mathf.Cos(randRad), Mathf.Sin(randRad), 0f);
 
 		//Push the heart container
-		GetComponent<Rigidbody2D>().AddForce(dir * initialMoveForce);
+		GetComponent<Rigidbody2D>().AddForce(dir * initialMoveForce * Random.Range(.85f, 1.1f), ForceMode2D.Impulse);
 	}
 
 	public void Pickup(Player player)
@@ -26,10 +26,15 @@ public class HeartContainer : MonoBehaviour, IPickable
 		if (pickedUp)
 			return;
 
-		player.TakeDamage(-healingAmount);
+		//Only destroy if player could be healed by the container
+		if (!player.HealDamage(healingAmount))
+			return;
 
-		Instantiate(pickupFXPrefab, transform.position, Quaternion.identity);
+		pickedUp = true;
 
-		Destroy(this);
+		if (pickupFXPrefab)
+			Instantiate(pickupFXPrefab, transform.position, Quaternion.identity);
+
+		Destroy(gameObject);
 	}
 }

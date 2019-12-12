@@ -111,8 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1032d725995e445824ce9578f78935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementForce: 100
-  maxVelocityMagnitude: 5000
+  movementForce: 9
+  torque: 1
+  maxVelocityMagnitude: 15
   turnSpeed: 72
   _type: 2
 --- !u!114 &4376976290206059842
@@ -144,7 +145,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

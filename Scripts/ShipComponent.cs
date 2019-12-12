@@ -14,11 +14,16 @@ public class ShipComponent : MonoBehaviour, IPickable
 		if (pickedUp)
 			return;
 
-		player.AddSpaceshipComponent(type);
+		//Dont pickup if could not add the component (due to it being maxed out)
+		if (!player.AddSpaceshipComponent(type))	
+			return;
 
-		Instantiate(pickupFXPrefab, transform.position, Quaternion.identity);
+		pickedUp = true;
 
-		Destroy(this);
+		if (pickupFXPrefab)
+			Instantiate(pickupFXPrefab, transform.position, Quaternion.identity);
+
+		Destroy(gameObject);
 	}
 }
 

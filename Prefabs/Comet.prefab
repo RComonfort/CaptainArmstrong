@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4798252958541085131}
   - component: {fileID: 4798252958541085124}
-  - component: {fileID: 4798252958541085129}
+  - component: {fileID: 7318376434902571009}
   - component: {fileID: 4798252958541085130}
+  - component: {fileID: 4798252958541085129}
   - component: {fileID: 4186067825356666702}
   m_Layer: 0
   m_Name: Comet
@@ -83,6 +84,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7318376434902571009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4798252958541085125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845f366e51b7ddc42a40055b44c54a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  deathFXPrefab: {fileID: 0}
+  damage: 1
+--- !u!114 &4798252958541085130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4798252958541085125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1032d725995e445824ce9578f78935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementForce: 50000
+  torque: 20
+  maxVelocityMagnitude: 20
+  turnSpeed: 90
+  _type: 0
 --- !u!50 &4798252958541085129
 Rigidbody2D:
   serializedVersion: 4
@@ -104,22 +137,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4798252958541085130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4798252958541085125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb1032d725995e445824ce9578f78935, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementForce: 50000
-  maxVelocityMagnitude: 20
-  turnSpeed: 90
-  _type: 0
 --- !u!70 &4186067825356666702
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

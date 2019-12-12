@@ -1,6 +1,8 @@
 ﻿public interface IDamageable
 {
-    void TakeDamage(int amount);
+    bool TakeDamage(int amount);
+
+	bool HealDamage(int amount);
 
 	void Die();
 

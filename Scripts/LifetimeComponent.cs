@@ -30,6 +30,6 @@ public class LifetimeComponent : MonoBehaviour
 
 	private void DestroyObj()
 	{
-		Destroy(this);
+		Destroy(gameObject);
 	}
 }

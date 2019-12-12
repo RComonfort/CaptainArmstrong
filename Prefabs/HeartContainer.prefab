@@ -99,7 +99,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healingAmount: 1
-  initialMoveForce: 50
+  initialMoveForce: 5
   pickupFXPrefab: {fileID: 0}
 --- !u!114 &5201248120128091603
 MonoBehaviour:

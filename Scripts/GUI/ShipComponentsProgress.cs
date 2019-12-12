@@ -54,7 +54,7 @@ public class ShipComponentsProgress : MonoBehaviour
 			int needs = player.NeededComps[type];
 
 			TextMeshProUGUI tmPRO = componentTexts[type];
-			tmPRO.SetText("<sup>" + has + "</sup><size=90%>/<size=100%><sub>" + needs + "</sub>");
+			tmPRO.SetText("<sup>" + has + "</sup><size=85%>/<size=100%><sub>" + needs + "</sub>");
 		}
     }
 }

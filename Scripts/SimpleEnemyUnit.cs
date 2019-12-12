@@ -15,18 +15,30 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 		hp = maxHealth;
 	}
 	
-    public void TakeDamage(int amount)
+    public bool TakeDamage(int amount)
 	{
 		if (isDead)
-			return;
+			return false;
 
 		//If player is a child of this object, ignore damage
 		if (GetComponentInChildren<Player>())
-			return;
+			return false;
 
-		hp -= amount;
-		if (hp <= 0)
+		hp = Mathf.Clamp(hp - amount, 0, maxHealth);
+		if (hp == 0)
 			Die();
+
+		return true;
+	}
+
+	public bool HealDamage(int amount)
+	{
+		if (hp == maxHealth)
+			return false;
+
+		hp = Mathf.Clamp(hp + amount, 0, maxHealth);
+
+		return true;
 	}
 
 	public void Die()
@@ -34,7 +46,10 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 		isDead = true;
 
 		//Play FX
-		Instantiate(deathFXPrefab, transform.position, Quaternion.identity);
+		if (deathFXPrefab)
+			Instantiate(deathFXPrefab, transform.position, Quaternion.identity);
+
+		Destroy(gameObject);
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) {
