@@ -35,11 +35,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	public Dictionary<EShipComponent, int> ObtainedComps {get {return obtainedComps;}}
 	public Dictionary<EShipComponent, int> NeededComps {get {return neededComps;}}
 
-	private ForwardMovementComponent movementComp; //Movement component from the ship or comet that the player is on
+	private IRideable riddenObj; 
 	private Transform targetJumpingPosition; 
 	[HideInInspector] public EPlayerState playerState;
-	private HashSet<Transform> nearbyComets;
-	private Transform nearestComet;
+	private HashSet<Comet> nearbyComets;
+	private Comet nearestComet;
 	private Vector3 initialPosOffset;
 	private Quaternion initialRotOffset;
 	private Dictionary<EShipComponent, int> obtainedComps;
@@ -48,11 +48,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
     // Start is called before the first frame update
     void Start()
     {
-        movementComp = GetComponentInParent<ForwardMovementComponent>();
-
+		riddenObj = GetComponentInParent<IRideable>();
+		riddenObj.GetsRidden(this);
 		playerState = EPlayerState.OnComet;
 
-		nearbyComets = new HashSet<Transform>();
+		nearbyComets = new HashSet<Comet>();
 		
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
@@ -82,7 +82,16 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 		//Update nearest comet
 		CometTrackingUpdate();
+
+		DrawNearestComet();
     }
+
+	private void DrawNearestComet()
+	{
+		if (playerState != EPlayerState.OnComet || !nearestComet)
+			return;
+
+	}
 
 	private void CometTrackingUpdate()
 	{
@@ -94,10 +103,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 		//Iterate through comets to find closest
 		float minSqrDist = float.MaxValue;
-		HashSet<Transform>.Enumerator em = nearbyComets.GetEnumerator(); 
+		HashSet<Comet>.Enumerator em = nearbyComets.GetEnumerator(); 
 
 		while (em.MoveNext()) { 
-            float sqrDist = (em.Current.position - transform.position).sqrMagnitude;
+            float sqrDist = (em.Current.transform.position - transform.position).sqrMagnitude;
 
 			if (sqrDist < minSqrDist)
 			{
@@ -130,7 +139,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 		else if (bIsRotatingCCW)
 		{
-			movementComp?.CancelRotation();
+			riddenObj?.CancelRotation();
 			bIsRotatingCCW = false;
 		}
 
@@ -142,7 +151,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 		else if (bIsRotatingCW)
 		{
-			movementComp?.CancelRotation();
+			riddenObj?.CancelRotation();
 			bIsRotatingCW = false;
 		}
 	}
@@ -152,7 +161,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		if (Time.time > lastAngleStep + angleStepCD)
 		{
 			lastAngleStep = Time.time;
-			movementComp?.AddRotationAngles(angleStep);
+			riddenObj?.Rotate(angleStep);
 		}
 	}
 
@@ -161,13 +170,14 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		if (playerState != EPlayerState.OnComet || !nearestComet)
 			return;
 
-		movementComp?.CancelRotation();
+		riddenObj.CancelRotation();
 		
 		//Add ridden comet as nearby comet
-		nearbyComets.Add(movementComp.transform);
+		nearbyComets.Add(riddenObj as Comet);
 
 		//Dettach from comet
-		movementComp = null;
+		riddenObj.StopBeingRidden();
+		riddenObj = null;
 		transform.parent = null;
 
 		//Set state to jumping and start jumping process
@@ -175,22 +185,24 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		StartCoroutine(JumpingRoutine(nearestComet));
 	}
 
-	private IEnumerator JumpingRoutine(Transform cometTarget)
+	private IEnumerator JumpingRoutine(Comet cometTarget)
 	{
 		//Remove new ridden comet from nearby comets
 		nearbyComets.Remove(cometTarget);
 		nearestComet = null;
+		
+		Transform target = cometTarget.transform;
 
-		while (transform.position != cometTarget.position)
+		while (transform.position != target.position)
 		{
-			transform.position = Vector3.MoveTowards(transform.position, cometTarget.position, jumpingSpeed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards(transform.position, target.position, jumpingSpeed * Time.deltaTime);
 			yield return null;
 		}
 
 		//New comet reached, update player state
-		movementComp = cometTarget.GetComponent<ForwardMovementComponent>();
+		riddenObj = cometTarget;
 		playerState = EPlayerState.OnComet;
-		transform.SetParent(cometTarget);
+		transform.SetParent(target);
 
 		//Apply offsets
 		transform.localPosition = initialPosOffset;
@@ -324,14 +336,14 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			return;
 			
 		//Add collided object if it is a comet that is not already considered
-		ForwardMovementComponent movingObj = other.gameObject.GetComponent<ForwardMovementComponent>();
-		if (movingObj && movingObj.type == EMovementEntityType.Comet && !nearbyComets.Contains(movingObj.transform))
-			nearbyComets.Add(movingObj.transform);
+		Comet movingObj = other.gameObject.GetComponent<Comet>();
+		if (movingObj && !nearbyComets.Contains(movingObj))
+			nearbyComets.Add(movingObj);
 	}
 
 	public void OnObjectExitedTrigger(Trigger2DRelay triggerObj, Collider2D other)
 	{
-		nearbyComets.Remove(other.transform);
+		nearbyComets.Remove(other.GetComponent<Comet>());
 
 		if (nearbyComets.Count == 0)
 			nearestComet = null;

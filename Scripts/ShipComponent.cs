@@ -27,7 +27,3 @@ public class ShipComponent : MonoBehaviour, IPickable
 	}
 }
 
-public interface IPickable {
-	
-	void Pickup(Player player);
-}

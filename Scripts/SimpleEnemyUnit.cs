@@ -8,20 +8,18 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 	[SerializeField] private GameObject deathFXPrefab;
 	[SerializeField] private int damage = 1;
 
+	public bool indestructible = false;
 	private bool isDead = false;
 	private int hp;
 
-	private void Start() {
+	protected virtual void Start() 
+	{
 		hp = maxHealth;
 	}
 	
     public bool TakeDamage(int amount)
 	{
-		if (isDead)
-			return false;
-
-		//If player is a child of this object, ignore damage
-		if (GetComponentInChildren<Player>())
+		if (isDead || indestructible)
 			return false;
 
 		hp = Mathf.Clamp(hp - amount, 0, maxHealth);

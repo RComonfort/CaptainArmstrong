@@ -59,12 +59,3 @@ public class Trigger2DRelay : MonoBehaviour
 		listener?.OnObjectExitedTrigger(this, other);	
 	}
 }
-
-public interface ITriggerListener
-{
-	void OnObjectEnteredTrigger(Trigger2DRelay triggerObj, Collider2D other);
-
-	void OnObjectExitedTrigger(Trigger2DRelay triggerObj, Collider2D other);
-
-	void OnObjectStayedTrigger(Trigger2DRelay triggerObj, Collider2D other);
-}
