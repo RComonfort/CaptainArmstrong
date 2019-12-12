@@ -55,8 +55,6 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 		if (isDead)
 			return;
 
-		print(gameObject.name + " collided with " + other.gameObject.name);
-
 		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
 
 		if (damageableObj != null)

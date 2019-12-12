@@ -104,8 +104,6 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		if (playerState == EPlayerState.Dead)
 			return;
 
-		print(gameObject.name + " collided with " + other.gameObject.name);
-
 		//Only deal damage when on comet or spaceship
 		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
 		if (damageableObj != null)
@@ -279,15 +277,20 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		//Instantiate necessary components
 		for (int i = 0; i < amount; i++)
 		{
-			float angle = (360f / amount) * i;
-			Quaternion rot = Quaternion.AngleAxis(angle, Vector3.right);
+			float rad = Random.Range(0, Mathf.PI * 2);
+			Quaternion rot = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)))); 
 
 			droppedComps[i] = Instantiate(template, transform.position, rot);
+
+			//Push object away
+			Rigidbody2D rb = droppedComps[i].GetComponent<Rigidbody2D>();
+			rb.AddForce(droppedComps[i].transform.right * 7.5f, ForceMode2D.Impulse);
+			rb.gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
+			rb.drag = .5f;
 		}
 
 		//Animate scale increase
 		float scale = 0f;
-
 		while (scale < 1f)
 		{
 			foreach (GameObject obj in droppedComps)
@@ -295,9 +298,15 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 				obj.transform.localScale = new Vector3(scale, scale);
 			}
 
-			scale = Mathf.Clamp01(scale + 1.5f * Time.deltaTime);
+			scale = Mathf.Clamp01(scale + (1/1.5f * Time.deltaTime));
 
 			yield return null;
+		}
+
+		//Reenabled collisions
+		foreach (GameObject go in droppedComps)
+		{
+			go.layer = LayerMask.NameToLayer("Default");
 		}
 
 	}
@@ -317,7 +326,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	private bool RemoveFractionOfObtainedComps()
 	{
-		int compsToRemove = TotalObtainedComps() / maxHealth;
+		int compsToRemove = TotalObtainedComps() / (maxHealth - 1);
 
 		if (compsToRemove == 0)
 			return false;

@@ -9,6 +9,9 @@ public class ShipComponent : MonoBehaviour, IPickable
 	
 	private bool pickedUp = false;
 
+	private void Start() {
+	}
+
 	public void Pickup(Player player)
 	{
 		if (pickedUp)
