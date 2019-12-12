@@ -1,7 +1,8 @@
 ﻿public enum EMovementEntityType
 {
     Comet,
-	Spaceship
+	Spaceship,
+	DebrisAdrift
 }
 
 public enum EPlayerState

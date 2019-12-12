@@ -273,6 +273,7 @@ MonoBehaviour:
   delayBetweenSpawns: 0.2
   spawnAmount: 5
   firstWaveDelay: 1.5
+  orientToScreenCenter: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -584,6 +585,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
         type: 3}
+      propertyPath: requiredComponents.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
       propertyPath: cometJumpRadius
       value: 7
       objectReference: {fileID: 0}
@@ -591,6 +597,31 @@ PrefabInstance:
         type: 3}
       propertyPath: jumpingSpeed
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: requiredComponents.Array.data[0].requiredAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: requiredComponents.Array.data[1].component
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: requiredComponents.Array.data[1].requiredAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: requiredComponents.Array.data[2].component
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178770017279555692, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: requiredComponents.Array.data[2].requiredAmount
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ae5f4a82e676fd418e184aaa5a62002, type: 3}
@@ -607,7 +638,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679929845}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25770bf379053b14da32ab974cb9198d, type: 3}
   m_Name: 
@@ -636,6 +667,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyBy: 1
   lifetime: 20
+--- !u!114 &2042689487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042689485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845f366e51b7ddc42a40055b44c54a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  deathFXPrefab: {fileID: 0}
+  damage: 1
 --- !u!1001 &4798252959163826563
 PrefabInstance:
   m_ObjectHideFlags: 0

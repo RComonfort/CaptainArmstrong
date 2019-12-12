@@ -16,6 +16,8 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	[Header("Health")]
 	[SerializeField] private int maxHealth = 3;
+	[SerializeField] private int damageOnContact = 1;
+	
 
 	[Header("Ship Repairing")]
 	[SerializeField] private RequiredComponent[] requiredComponents;
@@ -225,7 +227,43 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	private IEnumerator DropGrabbedComponents(EShipComponent component, int amount)
 	{
-		yield return null;
+		GameObject[] droppedComps = new GameObject[amount];
+
+		//Get the prefab template
+		GameObject template = null;
+		for (int i = 0; i < requiredComponents.Length; i++)
+		{
+			if (requiredComponents[i].component == component)	
+			{
+				template = requiredComponents[i].prefab;
+				break;
+			}
+		}
+
+		//Instantiate necessary components
+		for (int i = 0; i < amount; i++)
+		{
+			float angle = (360f / amount) * i;
+			Quaternion rot = Quaternion.AngleAxis(angle, Vector3.right);
+
+			droppedComps[i] = Instantiate(template, transform.position, rot);
+		}
+
+		//Animate scale increase
+		float scale = 0f;
+
+		while (scale < 1f)
+		{
+			foreach (GameObject obj in droppedComps)
+			{
+				obj.transform.localScale = new Vector3(scale, scale);
+			}
+
+			scale = Mathf.Clamp01(scale + 1.5f * Time.deltaTime);
+
+			yield return null;
+		}
+		
 	}
 
 	public int TotalObtainedComps()
@@ -238,6 +276,29 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
         } 
 
 		return total;
+	}
+
+	public void AddSpaceshipComponent(EShipComponent type)
+	{
+		obtainedComps[type] = Mathf.Clamp(obtainedComps[type] + 1, 0, neededComps[type]);
+	}
+
+	private void OnCollisionEnter2D(Collision2D other) {
+		
+		IDamageable damageableObj = other.gameObject.GetComponent<IDamageable>();
+
+		if (damageableObj != null)
+		{
+			//Ignore the comet we are riding
+			if (playerState == EPlayerState.OnComet && other.transform.root == transform.root)
+				return;
+
+			damageableObj.TakeDamage(damageOnContact);
+		}
+
+		IPickable pickup = other.gameObject.GetComponent<IPickable>();
+		if (pickup != null)
+			pickup.Pickup(this);
 	}
 
 #region TRIGGER_LISTENER
@@ -271,13 +332,23 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	public void TakeDamage(int amount)
 	{
-		if (!canBeDamaged || RemoveFractionOfObtainedComps())
+		if (!canBeDamaged)
 			return;
-		
-		hp -= amount;
 
-		if (hp <= 0)
-			Die();
+		//If cannot drop grabbed components, take damage instead
+		if (!RemoveFractionOfObtainedComps())
+		{
+			hp = Mathf.Clamp(hp - amount, 0, maxHealth);
+
+			if (hp <= 0)
+			{
+				Die();
+				return;
+			}
+		}
+		
+		//Play hurt animation
+
 	}
 
 	public void Die()
@@ -293,4 +364,5 @@ public class RequiredComponent
 {
 	public EShipComponent component;
 	public int amount;
+	public GameObject prefab;
 }
