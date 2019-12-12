@@ -42,6 +42,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private Comet nearestComet;
 	private Vector3 initialPosOffset;
 	private Quaternion initialRotOffset;
+	private LineRenderer nearestCometLine;
 	private Dictionary<EShipComponent, int> obtainedComps;
 	private Dictionary<EShipComponent, int> neededComps;
 
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		riddenObj.GetsRidden(this);
 		playerState = EPlayerState.OnComet;
 
-		nearbyComets = new HashSet<Comet>();
+		nearestCometLine = GetComponent<LineRenderer>();
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
@@ -65,6 +66,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		hp = maxHealth;
 
 		//Ship repaired init
+		nearbyComets = new HashSet<Comet>();
 		neededComps = new Dictionary<EShipComponent, int>();
 		obtainedComps = new Dictionary<EShipComponent, int>();
 		for (int i = 0; i < requiredComponents.Length; i++)
@@ -153,8 +155,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private void DrawNearestComet()
 	{
 		if (playerState != EPlayerState.OnComet || !nearestComet)
-			return;
-
+			nearestCometLine.enabled = false;
+		else
+		{
+			nearestCometLine.enabled = true;
+			nearestCometLine.SetPositions(new Vector3[]{transform.position, nearestComet.transform.position});
+		}
 	}
 
 	public void JumpToNearestCommet()
