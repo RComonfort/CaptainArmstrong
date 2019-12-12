@@ -6,14 +6,16 @@ using TMPro;
 
 public class ShipComponentsProgress : MonoBehaviour
 {
+	[SerializeField] private Vector3 componentProgressScaleOverride = Vector3.one;
+
     private Player player;
 
-	private Dictionary<EShipComponent, TextMeshPro> componentTexts;
+	private Dictionary<EShipComponent, TextMeshProUGUI> componentTexts;
 
     // Start is called before the first frame update
     void Start()
     {
-		componentTexts = new Dictionary<EShipComponent, TextMeshPro>();
+		componentTexts = new Dictionary<EShipComponent, TextMeshProUGUI>();
 
         player = Object.FindObjectOfType<Player>();
 
@@ -26,16 +28,18 @@ public class ShipComponentsProgress : MonoBehaviour
 
 			//Add GUI template for the ship component progress: ([0]icon, [1]text)
 			GameObject newComponentGUI = Instantiate(componentGUI);
-			newComponentGUI.transform.SetParent(transform);
+			newComponentGUI.transform.SetParent(transform, true);
+			newComponentGUI.transform.localScale = componentProgressScaleOverride;
 
 			//Copy sprite that represents the ship component
 			Sprite compSprite = player.RequiredComponents[i].prefab.GetComponent<SpriteRenderer>().sprite;
 			newComponentGUI.transform.GetChild(0).GetComponent<Image>().sprite = compSprite;
 
 			//Save the ship component type to its text in the GUI
-			componentTexts.Add(type, newComponentGUI.transform.GetChild(1).GetComponent<TextMeshPro>());
+			componentTexts.Add(type, newComponentGUI.transform.GetChild(1).GetComponent<TextMeshProUGUI>());
 		}
 
+		//Clean up existing progress GUI comp
 		Destroy(componentGUI);
     }
 
@@ -49,8 +53,8 @@ public class ShipComponentsProgress : MonoBehaviour
 			int has = player.ObtainedComps[type];
 			int needs = player.NeededComps[type];
 
-			TextMeshPro tmPRO = componentTexts[type];
-			tmPRO.text = "<sup>" + has + "</sup><size=90%>/<size=100%><sub>" + needs + "</sub>";
+			TextMeshProUGUI tmPRO = componentTexts[type];
+			tmPRO.SetText("<sup>" + has + "</sup><size=90%>/<size=100%><sub>" + needs + "</sub>");
 		}
     }
 }
