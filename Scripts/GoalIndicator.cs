@@ -28,7 +28,7 @@ public class GoalIndicator : MonoBehaviour
 
 		Quaternion rot = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, dir));
 
-		indicator.localRotation = rot;
-		indicator.localPosition = dir * radiusFromBase;
+		indicator.rotation = rot;
+		indicator.position = indicator.parent.position + dir * radiusFromBase;
     }
 }
