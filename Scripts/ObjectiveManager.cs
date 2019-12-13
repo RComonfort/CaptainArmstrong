@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class ObjectiveManager : MonoBehaviour
 {
 	[SerializeField] private float objectiveSqrDistTreshhold = 1f;
 	[SerializeField] private GameObject gameOverScreen;
-
+	[SerializeField] private CinemachineVirtualCamera CMCam;
+	
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
 	[SerializeField] private Vector2 shipSpawnRangeFromPlayer = new Vector2(30f, 60f);
@@ -93,6 +95,7 @@ public class ObjectiveManager : MonoBehaviour
 		blackHoleSpawner.enabled = true;
 
 		//TODO: ZoomOut camera
+		StartCoroutine(ZoomOutCam(10, 1));
 
 		//Spawn final destination
 		SpawnPrefabCloseToPlayer(finalDestinationPrefab, ref finalDest, shipSpawnRangeFromPlayer * 3);
@@ -126,5 +129,22 @@ public class ObjectiveManager : MonoBehaviour
 		float distance = Random.Range(distRange.x, distRange.y);
 		Vector2 spawnPos = Random.insideUnitCircle * distance + (Vector2)player.transform.position;
 		assignTo = Instantiate(prefab, spawnPos, Quaternion.identity).transform;
+	}
+
+	IEnumerator ZoomOutCam(float deltaOrthoSize, float duration)
+	{
+		float initialSize = CMCam.m_Lens.OrthographicSize;
+		float targetSize = initialSize + deltaOrthoSize;
+		float animTime = 0;
+
+		while (CMCam.m_Lens.OrthographicSize != targetSize)
+		{
+			CMCam.m_Lens.OrthographicSize = Mathf.SmoothStep(initialSize, targetSize, animTime / duration);
+
+			animTime += Time.deltaTime;
+
+			yield return null;
+		}
+		
 	}
 }
