@@ -24,6 +24,7 @@ public class Ship : MonoBehaviour, IRideable
 	public void GetsRidden(Player by)
 	{
 		player = by;
+		movementComponent.enabled = true;
 		destroyedShipSprite = spriteRenderer.sprite;
 		spriteRenderer.sprite = fixedShipSprite;
 	}

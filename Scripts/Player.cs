@@ -274,7 +274,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		if (Time.time > lastAngleStep + angleStepCD)
 		{
 			lastAngleStep = Time.time;
-			riddenObj?.Rotate(angleStep);
+			riddenObj?.Rotate(value);
 		}
 	}
 
