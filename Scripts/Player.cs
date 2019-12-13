@@ -58,9 +58,15 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		hp = maxHealth;
 		playerState = EPlayerState.OnComet;
 
+		//Ship repaired init
 		nearbyComets = new HashSet<Comet>();
 		neededComps = new Dictionary<EShipComponent, int>();
 		obtainedComps = new Dictionary<EShipComponent, int>();
+		for (int i = 0; i < requiredComponents.Length; i++)
+		{
+			neededComps.Add(requiredComponents[i].component, requiredComponents[i].amount);
+			obtainedComps.Add(requiredComponents[i].component, 0);
+		}
 
 		cannotBeDamagedBy = new HashSet<IDamageDealer>();
 
@@ -78,14 +84,6 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
-
-		//Ship repaired init
-
-		for (int i = 0; i < requiredComponents.Length; i++)
-		{
-			neededComps.Add(requiredComponents[i].component, requiredComponents[i].amount);
-			obtainedComps.Add(requiredComponents[i].component, 0);
-		}
 	}
 
 	// Update is called once per frame
@@ -285,6 +283,8 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 		riddenObj.StopBeingRidden();
 
+		IRideable currentComet = riddenObj;
+
 		riddenObj = ship;
 		riddenObj.GetsRidden(this);
 		transform.SetParent(ship.transform, true);
@@ -296,6 +296,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		//Remove player's collider and sprite renderer
 		Destroy(GetComponent<Collider2D>());
 		Destroy(GetComponent<SpriteRenderer>());
+
+		//Destroy ridden comet 
+		Destroy((currentComet as Component)?.gameObject);
 	}
 
 	public void Escape()

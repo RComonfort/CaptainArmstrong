@@ -6,7 +6,7 @@ using UnityEngine;
 public class FinalDestination : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other) {
-		Player player = other.gameObject.GetComponent<Player>();
+		Player player = other.gameObject.GetComponentInChildren<Player>();
 
 		if (player)
 		{

@@ -80,6 +80,7 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
+
 		if (isDead)
 			return;
 

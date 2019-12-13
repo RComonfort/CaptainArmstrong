@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(ForwardMovementComponent))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class Ship : MonoBehaviour, IRideable
+public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 {
     private Player player;
 	[SerializeField] private Sprite fixedShipSprite;
@@ -63,7 +63,35 @@ public class Ship : MonoBehaviour, IRideable
 				player.BoardShip(this);
 			}
 		}
-		
-		
+	}
+
+	public bool TakeDamage(int amount, IDamageDealer instigator)
+	{
+		return player.TakeDamage(amount, instigator);
+	}
+
+	public void Die()
+	{
+		player.Die();
+	}
+
+	public void DealDamage(int amount, IDamageable entity)
+	{
+		player.TakeDamage(amount, this);
+	}
+
+	public bool HealDamage(int amount)
+	{
+		return player.HealDamage(amount);
+	}
+
+	public void AddTemporalInvunerability(IDamageDealer forEntity, float duration)
+	{
+		player.AddTemporalInvunerability(forEntity, duration);
+	}
+
+	public void RemoveTemporalInvunerability(IDamageDealer forEntity)
+	{
+		player.RemoveTemporalInvunerability(forEntity);
 	}
 }

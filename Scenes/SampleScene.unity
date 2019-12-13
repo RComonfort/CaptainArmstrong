@@ -527,7 +527,7 @@ PrefabInstance:
     - target: {fileID: 5504185432521550157, guid: 084e2d9421b0fa54daae66307ae1dcfc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.85
+      value: 2.41
       objectReference: {fileID: 0}
     - target: {fileID: 5504185432521550157, guid: 084e2d9421b0fa54daae66307ae1dcfc,
         type: 3}
@@ -893,7 +893,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1473,6 +1473,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4798252958541085130, guid: 24ded0114249517429e1b266e96ca3ac,
+        type: 3}
+      propertyPath: movementForce
+      value: 60000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24ded0114249517429e1b266e96ca3ac, type: 3}
