@@ -163,7 +163,7 @@ MonoBehaviour:
   allowMovementInput: 1
   angleStep: 5
   cometJumpRadius: 7
-  jumpingSpeed: 10
+  jumpingSpeed: 5
   maxHealth: 3
   damageOnContact: 1
   requiredComponents:

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, ITriggerListener, IDamageable
+public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDealer
 {
 	[Header("Player")]
 	[SerializeField] public bool allowMovementInput = true;
@@ -45,30 +45,39 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	private LineRenderer nearestCometLine;
 	private Dictionary<EShipComponent, int> obtainedComps;
 	private Dictionary<EShipComponent, int> neededComps;
+	private HashSet<IDamageDealer> cannotBeDamagedBy;
+
 
 	#region MonoBehaviourMethods
+
+	private void Awake() 
+	{
+		hp = maxHealth;
+		playerState = EPlayerState.OnComet;
+
+		nearbyComets = new HashSet<Comet>();
+		neededComps = new Dictionary<EShipComponent, int>();
+		obtainedComps = new Dictionary<EShipComponent, int>();
+
+		cannotBeDamagedBy = new HashSet<IDamageDealer>();
+
+		initialPosOffset = transform.localPosition;
+		initialRotOffset = transform.localRotation;
+	}
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		riddenObj = GetComponentInParent<IRideable>();
 		riddenObj.GetsRidden(this);
-		playerState = EPlayerState.OnComet;
-
+		
 		nearestCometLine = GetComponent<LineRenderer>();
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
 
-		initialPosOffset = transform.localPosition;
-		initialRotOffset = transform.localRotation;
-
-		hp = maxHealth;
-
 		//Ship repaired init
-		nearbyComets = new HashSet<Comet>();
-		neededComps = new Dictionary<EShipComponent, int>();
-		obtainedComps = new Dictionary<EShipComponent, int>();
+
 		for (int i = 0; i < requiredComponents.Length; i++)
 		{
 			neededComps.Add(requiredComponents[i].component, requiredComponents[i].amount);
@@ -114,7 +123,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			if (playerState == EPlayerState.OnComet && other.transform.root == transform.root)
 				return;
 
-			damageableObj.TakeDamage(damageOnContact);
+			DealDamage(damageOnContact, damageableObj);
 		}
 
 		IPickable pickup = other.gameObject.GetComponent<IPickable>();
@@ -129,11 +138,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	private void CometTrackingUpdate()
 	{
-		if (nearbyComets.Count == 0)
-		{
-			nearestComet = null;
-			return;
-		}
+		List<Comet> foundNull = new List<Comet>();
+
+		nearestComet = null;
 
 		//Iterate through comets to find closest
 		float minSqrDist = float.MaxValue;
@@ -141,6 +148,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 		while (em.MoveNext())
 		{
+			if (!em.Current)
+			{
+				foundNull.Add(em.Current);
+				continue;
+			}
+
 			float sqrDist = (em.Current.transform.position - transform.position).sqrMagnitude;
 
 			if (sqrDist < minSqrDist)
@@ -150,6 +163,8 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			}
 		}
 
+		foreach (Comet nullRef in foundNull)
+			nearbyComets.Remove(nullRef);
 	}
 
 	private void DrawNearestComet()
@@ -168,8 +183,6 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		if (playerState != EPlayerState.OnComet || !nearestComet)
 			return;
 
-		riddenObj.CancelRotation();
-
 		//Add ridden comet as nearby comet
 		nearbyComets.Add(riddenObj as Comet);
 
@@ -178,8 +191,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		riddenObj = null;
 		transform.parent = null;
 
+		//print("Jumping from " + gameObject.name + " to "+ nearestComet.name +",PS: " + playerState + ", nearByC: " + nearbyComets.ToString());
+
 		//Set state to jumping and start jumping process
 		playerState = EPlayerState.Jumping;
+		
 		StartCoroutine(JumpingRoutine(nearestComet));
 	}
 
@@ -187,14 +203,13 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	{
 		//Remove new ridden comet from nearby comets
 		nearbyComets.Remove(cometTarget);
-		nearestComet = null;
 
 		Transform target = cometTarget.transform;
 
 		riddenObj = cometTarget;
 		riddenObj.GetsRidden(this);
 
-		while (Vector3.SqrMagnitude(transform.position - target.position) < .5f)
+		while (Vector3.SqrMagnitude(transform.position - target.position) > .5f)
 		{
 			transform.position = Vector3.MoveTowards(transform.position, target.position, jumpingSpeed * Time.deltaTime);
 			yield return null;
@@ -407,8 +422,6 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	public void OnObjectEnteredTrigger(Trigger2DRelay triggerObj, Collider2D other)
 	{
-		if (playerState != EPlayerState.OnComet)
-			return;
 
 		//Add collided object if it is a comet that is not already considered
 		Comet movingObj = other.gameObject.GetComponent<Comet>();
@@ -430,12 +443,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	}
 	#endregion
 
-	#region DAMAGEABLE
+	#region DAMAGEABLE/DAMAGEDEALER
 
-	public bool TakeDamage(int amount)
+	public bool TakeDamage(int amount, IDamageDealer instigator)
 	{
-		//If invulnerable or dead, do not take damage
-		if (!canBeDamaged || playerState == EPlayerState.Dead)
+		//If invulnerable or dead or cannot be damaged by that entity, return
+		if (!canBeDamaged || playerState == EPlayerState.Dead || cannotBeDamagedBy.Contains(instigator))
 			return false;
 
 		//If cannot drop grabbed components, take damage instead
@@ -469,6 +482,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		//TODO: Play Death Animation
 	}
 
+	public void DealDamage(int amount, IDamageable entity)
+	{
+		entity.TakeDamage(damageOnContact, this);
+	}
+
 	public bool HealDamage(int amount)
 	{
 		if (hp == maxHealth)
@@ -477,6 +495,23 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		hp = Mathf.Clamp(hp + amount, 0, maxHealth);
 
 		return true;
+	}
+
+	public void AddTemporalInvunerability(IDamageDealer forEntity, float duration)
+	{
+		cannotBeDamagedBy.Add(forEntity);
+		StartCoroutine(RemoveTempInvDispatch(forEntity, duration));
+	}
+
+	public void RemoveTemporalInvunerability(IDamageDealer forEntity)
+	{
+		cannotBeDamagedBy.Remove(forEntity);
+	}
+
+	IEnumerator RemoveTempInvDispatch(IDamageDealer forEntity, float duration)
+	{
+		yield return new WaitForSeconds(duration);
+		RemoveTemporalInvunerability(forEntity);
 	}
 
 	#endregion

@@ -56,7 +56,7 @@ public class ObjectiveManager : MonoBehaviour
 	{
 		int obtainedParts = player.TotalObtainedComps();
 
-		if (obtainedParts == neededParts) //If player gathered all pieces
+		if (obtainedParts == neededParts && neededParts != 0) //If player gathered all pieces
 		{
 			SpawnPrefabCloseToPlayer(shipPrefab, ref ship, shipSpawnDistFromPlayer);
 

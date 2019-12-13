@@ -2,12 +2,21 @@
 
 public interface IDamageable
 {
-    bool TakeDamage(int amount);
+    bool TakeDamage(int amount, IDamageDealer instigator);
 
 	bool HealDamage(int amount);
 
 	void Die();
 
+	void AddTemporalInvunerability(IDamageDealer forEntity, float duration);
+
+	void RemoveTemporalInvunerability(IDamageDealer forEntity);
+
+}
+
+public interface IDamageDealer
+{
+	void DealDamage(int amount, IDamageable entity);
 }
 
 public interface IRideable

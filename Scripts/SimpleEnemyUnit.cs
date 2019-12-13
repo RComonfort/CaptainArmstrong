@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleEnemyUnit : MonoBehaviour, IDamageable
+public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 {
 	[SerializeField] private int maxHealth = 1;
 	[SerializeField] private GameObject deathFXPrefab;
@@ -14,16 +14,24 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 	private bool isDead = false;
 	private int hp;
 	private Dictionary<IDamageable, float> invulnerableObjects;
+	private HashSet<IDamageDealer> cannotBeDamagedBy;
 
 	protected virtual void Start() 
 	{
 		hp = maxHealth;
 		invulnerableObjects = new Dictionary<IDamageable, float>();
+		cannotBeDamagedBy = new HashSet<IDamageDealer>();
+	}
+
+	public void DealDamage(int amount, IDamageable entity)
+	{
+		entity.TakeDamage(damage, this);
+		invulnerableObjects.Add(entity, Time.timeSinceLevelLoad);
 	}
 	
-    public bool TakeDamage(int amount)
+    public bool TakeDamage(int amount, IDamageDealer instigator)
 	{
-		if (isDead || indestructible)
+		if (isDead || indestructible || cannotBeDamagedBy.Contains(instigator))
 			return false;
 
 		hp = Mathf.Clamp(hp - amount, 0, maxHealth);
@@ -54,6 +62,23 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 		Destroy(gameObject);
 	}
 
+	public void AddTemporalInvunerability(IDamageDealer forEntity, float duration)
+	{
+		cannotBeDamagedBy.Add(forEntity);
+		StartCoroutine(RemoveTempInvDispatch(forEntity, duration));
+	}
+
+	public void RemoveTemporalInvunerability(IDamageDealer forEntity)
+	{
+		cannotBeDamagedBy.Remove(forEntity);
+	}
+
+	IEnumerator RemoveTempInvDispatch(IDamageDealer forEntity, float duration)
+	{
+		yield return new WaitForSeconds(duration);
+		RemoveTemporalInvunerability(forEntity);
+	}
+
 	private void OnCollisionEnter2D(Collision2D other) {
 		
 		if (isDead)
@@ -75,8 +100,7 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable
 					return;
 			}
 
-			damageableObj.TakeDamage(damage);
-			invulnerableObjects.Add(damageableObj, Time.timeSinceLevelLoad);
+			DealDamage(damage, damageableObj);
 		}
 	}
 }

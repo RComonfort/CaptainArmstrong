@@ -20,14 +20,20 @@ public class Comet : SimpleEnemyUnit, IRideable
 	{
 		player = by;
 		gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
+		indestructible = true;
 	}
 
 	public void StopBeingRidden()
 	{
-		player = null;
-		CancelRotation();
+		AddTemporalInvunerability(player, 1f);
 
-		Invoke("EnableCollision", 0.2f);
+		player.AddTemporalInvunerability(this, 1f);
+
+		CancelRotation();
+		indestructible = false;
+		gameObject.layer = LayerMask.NameToLayer("Default");
+
+		player = null;
 	}
 
 	public void Rotate(float angle)
@@ -38,10 +44,5 @@ public class Comet : SimpleEnemyUnit, IRideable
 	public void CancelRotation()
 	{
 		movementComponent?.CancelRotation();
-	}
-
-	private void EnableCollision()
-	{
-		gameObject.layer = LayerMask.NameToLayer("Default");
 	}
 }
