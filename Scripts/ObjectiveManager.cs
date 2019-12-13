@@ -63,7 +63,7 @@ public class ObjectiveManager : MonoBehaviour
 
 			matchState = EMatchState.SeekingShip;
 
-			goalIndicator.goal = ship;
+			goalIndicator.SetGoal(ship);
 			goalIndicator.enabled = true;
 		}
 	}
@@ -88,18 +88,16 @@ public class ObjectiveManager : MonoBehaviour
 
 		//Turn off all spawning
 		foreach (ScreenEdgeSpawner s in spawners)
-		{
 			s.enabled = false;
-		}
-		
-		//Enabled spawning of blackholes
+		//Enable spawning of blackholes
 		blackHoleSpawner.enabled = true;
 
 		//TODO: ZoomOut camera
 
 		//Spawn final destination
 		SpawnPrefabCloseToPlayer(finalDestinationPrefab, ref finalDest, shipSpawnRangeFromPlayer * 3);
-		goalIndicator.goal = finalDest;
+		goalIndicator.SetGoal(finalDest);
+		goalIndicator.SetNewBaseObject(ship.transform, ship.GetComponentInChildren<SpriteRenderer>().bounds);
 	}
 
 	private void OnPlayerEscaped()

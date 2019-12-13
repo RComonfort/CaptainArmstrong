@@ -5,7 +5,7 @@ using UnityEngine;
 public class GoalIndicator : MonoBehaviour
 {
 	[SerializeField] private Transform baseObject;
-	[SerializeField] public Transform goal;
+	[SerializeField] private Transform goal;
 	[SerializeField] private Sprite indicatorTexture;
 	[SerializeField] private float radiusFromBase = 2.5f;
 	
@@ -31,4 +31,15 @@ public class GoalIndicator : MonoBehaviour
 		indicator.rotation = rot;
 		indicator.position = indicator.parent.position + dir * radiusFromBase;
     }
+
+	public void SetNewBaseObject(Transform newBase, Bounds bounds)
+	{
+		baseObject = newBase;
+		radiusFromBase = Mathf.Sqrt(Mathf.Pow(bounds.extents.x, 2) + Mathf.Pow(bounds.extents.y, 2));
+	}
+
+	public void SetGoal(Transform newGoal)
+	{
+		goal = newGoal;
+	}
 }

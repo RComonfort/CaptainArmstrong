@@ -287,14 +287,15 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 		riddenObj = ship;
 		riddenObj.GetsRidden(this);
-		transform.parent = ship.transform;
+		transform.SetParent(ship.transform, true);
+		transform.localPosition = Vector3.zero;
+		transform.localRotation = Quaternion.identity;
+
 		playerState = EPlayerState.OnSpaceShip;
 
-		//turn off player sprite
-		GetComponent<SpriteRenderer>().enabled = false; 
-
-		//Remove player's collider
+		//Remove player's collider and sprite renderer
 		Destroy(GetComponent<Collider2D>());
+		Destroy(GetComponent<SpriteRenderer>());
 	}
 
 	public void Escape()
