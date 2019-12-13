@@ -79,6 +79,10 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 		RemoveTemporalInvunerability(forEntity);
 	}
 
+	private void OnTriggerEnter2D(Collider2D other) {
+		
+	}
+
 	private void OnCollisionEnter2D(Collision2D other) {
 		
 		if (isDead)

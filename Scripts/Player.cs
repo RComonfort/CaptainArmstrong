@@ -21,7 +21,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	[Header("Ship Repairing")]
 	[SerializeField] private RequiredComponent[] requiredComponents;
 
+	//Events
 	public event System.Action playerDeathEvent;
+	public event System.Action playerBoardedShipEvent;
+	public event System.Action playerReachedExitEvent;
 
 	private float lastAngleStep = 0f;           //When was the last angle delta added
 	private float angleStepCD = 0.05f;          //Time in secs that must be waited before rotating again
@@ -110,7 +113,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	}
 
 
-	private void OnCollisionEnter2D(Collision2D other)
+	public void OnCollisionEnter2D(Collision2D other)
 	{
 		if (playerState == EPlayerState.Dead)
 			return;
@@ -277,20 +280,27 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 	public void BoardShip(Ship ship)
 	{
+		if (playerBoardedShipEvent != null)
+			playerBoardedShipEvent();
+
 		riddenObj.StopBeingRidden();
 
 		riddenObj = ship;
 		riddenObj.GetsRidden(this);
+		transform.parent = ship.transform;
 		playerState = EPlayerState.OnSpaceShip;
-		GetComponent<SpriteRenderer>().enabled = false; //turn off player sprite
 
-		//Adjust player's collider to match ship's sprite bounds
-		Bounds bounds = ship.GetComponentInChildren<SpriteRenderer>().bounds;
-		Vector3 lossyScale = ship.transform.lossyScale;
-		BoxCollider2D coll = GetComponent<BoxCollider2D>();
-		coll.size = new Vector3(bounds.size.x /lossyScale.x,
-                            bounds.size.y /lossyScale.y,
-                            bounds.size.z /lossyScale.z);
+		//turn off player sprite
+		GetComponent<SpriteRenderer>().enabled = false; 
+
+		//Remove player's collider
+		Destroy(GetComponent<Collider2D>());
+	}
+
+	public void Escape()
+	{
+		if (playerReachedExitEvent != null)
+			playerReachedExitEvent();
 	}
 
 	#endregion

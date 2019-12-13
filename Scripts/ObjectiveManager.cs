@@ -9,7 +9,7 @@ public class ObjectiveManager : MonoBehaviour
 
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
-	[SerializeField] private float shipSpawnDistFromPlayer = 60f;
+	[SerializeField] private Vector2 shipSpawnRangeFromPlayer = new Vector2(30f, 60f);
 	
 	[Header("Ship Phase")]
 	[SerializeField] private ScreenEdgeSpawner blackHoleSpawner;
@@ -28,7 +28,11 @@ public class ObjectiveManager : MonoBehaviour
     void Start()
     {
         player = Object.FindObjectOfType<Player>();
+
+		//Suscribe to player events
 		player.playerDeathEvent += OnPlayerDeath;
+		player.playerBoardedShipEvent += OnPlayerBoardedShip;
+		player.playerReachedExitEvent += OnPlayerEscaped;
 
 		goalIndicator = player.GetComponent<GoalIndicator>();
 		neededParts = player.TotalNeededComps();
@@ -46,9 +50,6 @@ public class ObjectiveManager : MonoBehaviour
 			
 			case EMatchState.SeekingShip: SeekingShipStateUpdate();
 				break;
-
-			case EMatchState.Escaping: EscapingStateUpdate();
-				break;
 		}
     }
 
@@ -58,7 +59,7 @@ public class ObjectiveManager : MonoBehaviour
 
 		if (obtainedParts == neededParts && neededParts != 0) //If player gathered all pieces
 		{
-			SpawnPrefabCloseToPlayer(shipPrefab, ref ship, shipSpawnDistFromPlayer);
+			SpawnPrefabCloseToPlayer(shipPrefab, ref ship, shipSpawnRangeFromPlayer);
 
 			matchState = EMatchState.SeekingShip;
 
@@ -78,46 +79,36 @@ public class ObjectiveManager : MonoBehaviour
 
 			return;
 		}
+	}
 
+	private void OnPlayerBoardedShip()
+	{
 		//Player reached ship
-		if (PlayerReachedGoal(ship.position))
+		matchState = EMatchState.Escaping;
+
+		//Turn off all spawning
+		foreach (ScreenEdgeSpawner s in spawners)
 		{
-			player.BoardShip(ship.GetComponent<Ship>());
-			matchState = EMatchState.Escaping;
-
-			//Turn off all spawning
-			foreach (ScreenEdgeSpawner s in spawners)
-			{
-				s.enabled = false;
-			}
-			
-			//Enabled spawning of blackholes
-			blackHoleSpawner.enabled = true;
-
-			//TODO: ZoomOut camera
-
-			//Spawn final destination
-			SpawnPrefabCloseToPlayer(finalDestinationPrefab, ref finalDest, shipSpawnDistFromPlayer * 3);
-			goalIndicator.goal = finalDest;
+			s.enabled = false;
 		}
 		
+		//Enabled spawning of blackholes
+		blackHoleSpawner.enabled = true;
+
+		//TODO: ZoomOut camera
+
+		//Spawn final destination
+		SpawnPrefabCloseToPlayer(finalDestinationPrefab, ref finalDest, shipSpawnRangeFromPlayer * 3);
+		goalIndicator.goal = finalDest;
 	}
 
-	private void EscapingStateUpdate()
+	private void OnPlayerEscaped()
 	{
-		if (PlayerReachedGoal(finalDest.position))
-		{
-			matchState = EMatchState.GameOver_Win;
+		matchState = EMatchState.GameOver_Win;
 
-			player.allowMovementInput = false;
+		player.allowMovementInput = false;
 
-			//TODO: Show Game Over Winning GUI
-		}
-	}
-
-	private bool PlayerReachedGoal(Vector3 goal)
-	{
-		return Vector3.SqrMagnitude(player.transform.position - goal) < objectiveSqrDistTreshhold;
+		//TODO: Show Game Over Winning GUI
 	}
 
 	private void OnPlayerDeath()
@@ -129,11 +120,12 @@ public class ObjectiveManager : MonoBehaviour
 		//TODO: Show Game Over losing GUI
 	}
 
-	private void SpawnPrefabCloseToPlayer(GameObject prefab, ref Transform assignTo, float distance)
+	private void SpawnPrefabCloseToPlayer(GameObject prefab, ref Transform assignTo, Vector2 distRange)
 	{
 		if (assignTo || !prefab)
 			return;
 
+		float distance = Random.Range(distRange.x, distRange.y);
 		Vector2 spawnPos = Random.insideUnitCircle * distance + (Vector2)player.transform.position;
 		assignTo = Instantiate(prefab, spawnPos, Quaternion.identity).transform;
 	}
