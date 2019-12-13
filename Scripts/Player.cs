@@ -16,8 +16,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 
 	[Header("Health")]
 	[SerializeField] private int maxHealth = 3;
-	[SerializeField] private int damageOnContact = 1;
-
+	[SerializeField] private int damageOnContact = 1;	
 
 	[Header("Ship Repairing")]
 	[SerializeField] private RequiredComponent[] requiredComponents;
@@ -266,11 +265,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		riddenObj.StopBeingRidden();
 
 		riddenObj = ship;
+		riddenObj.GetsRidden(this);
 		playerState = EPlayerState.OnSpaceShip;
 		GetComponent<SpriteRenderer>().enabled = false; //turn off player sprite
 
 		//Adjust player's collider to match ship's sprite bounds
-		Bounds bounds = ship.GetComponent<SpriteRenderer>().bounds;
+		Bounds bounds = ship.GetComponentInChildren<SpriteRenderer>().bounds;
 		Vector3 lossyScale = ship.transform.lossyScale;
 		BoxCollider2D coll = GetComponent<BoxCollider2D>();
 		coll.size = new Vector3(bounds.size.x /lossyScale.x,
@@ -450,7 +450,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			}
 		}
 
-		//Play hurt animation
+		//TODO: Play hurt animation
 
 		return true;
 	}
@@ -463,6 +463,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 			playerDeathEvent();
 
 		allowMovementInput = false;
+
+		riddenObj.StopBeingRidden();
+
+		//TODO: Play Death Animation
 	}
 
 	public bool HealDamage(int amount)

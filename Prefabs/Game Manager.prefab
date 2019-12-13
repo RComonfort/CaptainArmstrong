@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4184487461960211870}
   - component: {fileID: 4184487461960211873}
   - component: {fileID: 4184487461960211872}
+  - component: {fileID: 2056201874}
   m_Layer: 0
   m_Name: Screen Spawner
   m_TagString: Untagged
@@ -61,7 +62,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4184487461960211874}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
   m_Name: 
@@ -80,7 +81,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4184487461960211874}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
   m_Name: 
@@ -99,7 +100,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4184487461960211874}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
   m_Name: 
@@ -130,6 +131,25 @@ MonoBehaviour:
   spawnAmount: 1
   firstWaveDelay: 0
   orientToScreenCenter: 0
+--- !u!114 &2056201874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184487461960211874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 364402251520731936, guid: dfddfea8ec073464bb178e5cfb08c15a,
+    type: 3}
+  spawnTime: 15
+  delayBetweenSpawns: 0
+  spawnAmount: 1
+  firstWaveDelay: 0
+  orientToScreenCenter: 0
 --- !u!1 &4184487462067310705
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,6 +159,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4184487462067310702}
+  - component: {fileID: 761032272}
+  - component: {fileID: 761032273}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -161,3 +183,42 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &761032272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184487462067310705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5b2c335cd9ef046bea1fc70c87d97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectiveSqrDistTreshhold: 1
+  gameOverScreen: {fileID: 0}
+  shipPrefab: {fileID: 4985358919303150810, guid: 106446f2bfec0ad4bbcc796040dedf71,
+    type: 3}
+  shipSpawnDistFromPlayer: 60
+  blackHoleSpawner: {fileID: 761032273}
+  finalDestinationPrefab: {fileID: 8088549522680793313, guid: f4e8da27e26e1ca4e8dc964d7b0fa67e,
+    type: 3}
+--- !u!114 &761032273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184487462067310705}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 8250795590892328043, guid: 0e61a9945a1418147a947ea03375f949,
+    type: 3}
+  spawnTime: 5
+  delayBetweenSpawns: 1
+  spawnAmount: 5
+  firstWaveDelay: 1
+  orientToScreenCenter: 1

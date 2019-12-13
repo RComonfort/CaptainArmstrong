@@ -163,7 +163,7 @@ MonoBehaviour:
   allowMovementInput: 1
   angleStep: 5
   cometJumpRadius: 7
-  jumpingSpeed: 25
+  jumpingSpeed: 10
   maxHealth: 3
   damageOnContact: 1
   requiredComponents:
@@ -180,7 +180,7 @@ MonoBehaviour:
     prefab: {fileID: 1565320888453875278, guid: f73787fd948015d419671133106e9f25,
       type: 3}
   canBeDamaged: 1
-  playerState: 2
+  playerState: 0
 --- !u!114 &1679929847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +251,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4178770017279555694}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

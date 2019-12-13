@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObjectiveManager : MonoBehaviour
 {
 	[SerializeField] private float objectiveSqrDistTreshhold = 1f;
+	[SerializeField] private GameObject gameOverScreen;
 
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
@@ -44,6 +45,9 @@ public class ObjectiveManager : MonoBehaviour
 				break;
 			
 			case EMatchState.SeekingShip: SeekingShipStateUpdate();
+				break;
+
+			case EMatchState.Escaping: EscapingStateUpdate();
 				break;
 		}
     }
@@ -105,6 +109,8 @@ public class ObjectiveManager : MonoBehaviour
 		{
 			matchState = EMatchState.GameOver_Win;
 
+			player.allowMovementInput = false;
+
 			//TODO: Show Game Over Winning GUI
 		}
 	}
@@ -120,7 +126,7 @@ public class ObjectiveManager : MonoBehaviour
 
 		matchState = EMatchState.GameOver_Lose;
 
-		//TODO: Show Game Over Winning GUI
+		//TODO: Show Game Over losing GUI
 	}
 
 	private void SpawnPrefabCloseToPlayer(GameObject prefab, ref Transform assignTo, float distance)

@@ -512,26 +512,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4798252959163826563}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &761032271 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4184487462067310705, guid: ccc7609614b86414395f4763cb67781c,
-    type: 3}
-  m_PrefabInstance: {fileID: 4184487461583683134}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &761032272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 761032271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5b2c335cd9ef046bea1fc70c87d97d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shipPrefab: {fileID: 0}
-  shipSpawnDistFromPlayer: 60
 --- !u!1 &902986499
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,9 +816,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1679929850, guid: 0ae5f4a82e676fd418e184aaa5a62002, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+    - target: {fileID: 8603214721892622225, guid: 0ae5f4a82e676fd418e184aaa5a62002,
+        type: 3}
+      propertyPath: m_Simulated
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ae5f4a82e676fd418e184aaa5a62002, type: 3}
@@ -1289,16 +1270,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4184487461960211874, guid: ccc7609614b86414395f4763cb67781c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4184487461960211868, guid: ccc7609614b86414395f4763cb67781c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4184487461960211871, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_Enabled
@@ -1316,6 +1287,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184487461960211872, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056201874, guid: ccc7609614b86414395f4763cb67781c, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

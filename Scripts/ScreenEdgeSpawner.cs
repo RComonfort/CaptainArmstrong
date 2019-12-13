@@ -56,10 +56,10 @@ public class ScreenEdgeSpawner : MonoBehaviour
 			}
 
 			//Move away obj to hide its spawn off-screen
-			Collider2D collider = newObj.GetComponent<Collider2D>();
-			if (collider)
+			SpriteRenderer spriteRend = newObj.GetComponent<SpriteRenderer>();
+			if (spriteRend)
 			{
-				Vector3 bounds = collider.bounds.extents;
+				Vector3 bounds = spriteRend.bounds.extents;
 				bounds.z = 0;
 
 				//push away from screen center by the hypothenuse of the obj's bounds on X and Y
