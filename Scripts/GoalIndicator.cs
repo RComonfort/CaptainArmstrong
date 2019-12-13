@@ -5,7 +5,7 @@ using UnityEngine;
 public class GoalIndicator : MonoBehaviour
 {
 	[SerializeField] private Transform baseObject;
-	[SerializeField] private Transform goal;
+	[SerializeField] public Transform goal;
 	[SerializeField] private Sprite indicatorTexture;
 	[SerializeField] private float radiusFromBase = 2.5f;
 	

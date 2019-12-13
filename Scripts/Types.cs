@@ -25,3 +25,12 @@ public enum EShipComponent
 	Panel,
 	Battery
 }
+
+public enum EMatchState
+{
+	RepairingShip,
+	SeekingShip,
+	Escaping,
+	GameOver_Lose,
+	GameOver_Win
+}

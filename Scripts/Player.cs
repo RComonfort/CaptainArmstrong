@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	[Header("Ship Repairing")]
 	[SerializeField] private RequiredComponent[] requiredComponents;
 
+	public event System.Action playerDeathEvent;
 
 	private float lastAngleStep = 0f;           //When was the last angle delta added
 	private float angleStepCD = 0.05f;          //Time in secs that must be waited before rotating again
@@ -260,6 +261,23 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		}
 	}
 
+	public void BoardShip(Ship ship)
+	{
+		riddenObj.StopBeingRidden();
+
+		riddenObj = ship;
+		playerState = EPlayerState.OnSpaceShip;
+		GetComponent<SpriteRenderer>().enabled = false; //turn off player sprite
+
+		//Adjust player's collider to match ship's sprite bounds
+		Bounds bounds = ship.GetComponent<SpriteRenderer>().bounds;
+		Vector3 lossyScale = ship.transform.lossyScale;
+		BoxCollider2D coll = GetComponent<BoxCollider2D>();
+		coll.size = new Vector3(bounds.size.x /lossyScale.x,
+                            bounds.size.y /lossyScale.y,
+                            bounds.size.z /lossyScale.z);
+	}
+
 	#endregion
 
 
@@ -314,12 +332,24 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 		{
 			go.layer = LayerMask.NameToLayer("Default");
 		}
-
 	}
 
 	public int TotalObtainedComps()
 	{
 		Dictionary<EShipComponent, int>.Enumerator e = obtainedComps.GetEnumerator();
+
+		int total = 0;
+		while (e.MoveNext())
+		{
+			total += e.Current.Value;
+		}
+
+		return total;
+	}
+
+	public int TotalNeededComps()
+	{
+		Dictionary<EShipComponent, int>.Enumerator e = neededComps.GetEnumerator();
 
 		int total = 0;
 		while (e.MoveNext())
@@ -428,6 +458,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable
 	public void Die()
 	{
 		playerState = EPlayerState.Dead;
+
+		if (playerDeathEvent != null)
+			playerDeathEvent();
+
+		allowMovementInput = false;
 	}
 
 	public bool HealDamage(int amount)

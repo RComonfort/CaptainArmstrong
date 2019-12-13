@@ -512,6 +512,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4798252959163826563}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &761032271 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4184487462067310705, guid: ccc7609614b86414395f4763cb67781c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4184487461583683134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &761032272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761032271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5b2c335cd9ef046bea1fc70c87d97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipPrefab: {fileID: 0}
+  shipSpawnDistFromPlayer: 60
 --- !u!1 &902986499
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +763,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1319590187}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -816,20 +836,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8603214721892622225, guid: 0ae5f4a82e676fd418e184aaa5a62002,
-        type: 3}
-      propertyPath: m_BodyType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8603214721892622225, guid: 0ae5f4a82e676fd418e184aaa5a62002,
-        type: 3}
-      propertyPath: m_Simulated
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8603214721892622225, guid: 0ae5f4a82e676fd418e184aaa5a62002,
-        type: 3}
-      propertyPath: m_UseFullKinematicContacts
-      value: 1
+    - target: {fileID: 1679929850, guid: 0ae5f4a82e676fd418e184aaa5a62002, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ae5f4a82e676fd418e184aaa5a62002, type: 3}
@@ -1263,7 +1272,7 @@ PrefabInstance:
     - target: {fileID: 4184487462067310702, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4184487462067310702, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
@@ -1283,7 +1292,7 @@ PrefabInstance:
     - target: {fileID: 4184487461960211874, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4184487461960211868, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
@@ -1293,17 +1302,22 @@ PrefabInstance:
     - target: {fileID: 4184487461960211871, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4184487461960211870, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4184487461960211873, guid: ccc7609614b86414395f4763cb67781c,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184487461960211872, guid: ccc7609614b86414395f4763cb67781c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccc7609614b86414395f4763cb67781c, type: 3}
@@ -1426,7 +1440,7 @@ PrefabInstance:
     - target: {fileID: 5053444386730518255, guid: 408306b390dec0f43aae17aba851c364,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5053444386730518255, guid: 408306b390dec0f43aae17aba851c364,
         type: 3}
