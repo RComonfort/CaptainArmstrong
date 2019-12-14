@@ -5,7 +5,6 @@ using Cinemachine;
 
 public class ObjectiveManager : MonoBehaviour
 {
-	[SerializeField] private float objectiveSqrDistTreshhold = 1f;
 	[SerializeField] private GameObject gameOverScreen;
 	[SerializeField] private CinemachineVirtualCamera CMCam;
 	
