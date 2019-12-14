@@ -3,30 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
- using UnityEngine.EventSystems;
+using UnityEngine.EventSystems;
 
 
-public class MenuController : MonoBehaviour
+public class MenuController : MenuScriptParent
 {
+	[Header("SFX")]
 	[SerializeField] private AudioClip titleCardSFX;
-	
 
+	[Header("Music")]
+	[SerializeField] private AudioSource musicSource;
+	
+	[Header("Credits")]
+	[SerializeField] private GameObject creditsScreen;
+	
 	bool inMenu = false;
 	bool introReady = false;
 
-	private AudioSource[] audioSources;
 	private Animation anim;
-	private Button[] buttons;
-
-	private int selectedButtonIndex = 0;
+	
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-		audioSources = GetComponents<AudioSource>();
-		anim = GetComponent<Animation>();
-		buttons = GetComponentsInChildren<Button>();
+		base.Start();
 
+		anim = GetComponent<Animation>();
+
+		Init();
         InitiateIntro();
     }
 
@@ -36,27 +40,12 @@ public class MenuController : MonoBehaviour
         if (introReady && !inMenu && Input.GetAxisRaw("Action1") > .2f && Input.GetAxisRaw("Action2") > .2f)
 		{
 			InitiateMenu();
+			lastInputPress = Time.timeSinceLevelLoad;
+
 		}
 		else if (inMenu)
 		{
-			var pointer = new PointerEventData(EventSystem.current);
-
-			//Click current button
-			if (Input.GetAxisRaw("Action1") > .2f)
-			{
-				ExecuteEvents.Execute(buttons[selectedButtonIndex].gameObject, pointer, ExecuteEvents.submitHandler);
-			}
-			else if (Input.GetAxisRaw("Action1") > .2f) //Select next button (downwards)
-			{
-				//unhover current button
-				ExecuteEvents.Execute(buttons[selectedButtonIndex].gameObject, pointer, ExecuteEvents.pointerExitHandler);
-
-				//Update selected button index
-				selectedButtonIndex = (selectedButtonIndex + 1) % buttons.Length;
-
-				//Hover next button
-				ExecuteEvents.Execute(buttons[selectedButtonIndex].gameObject, pointer, ExecuteEvents.pointerEnterHandler);
-			}
+			ButtonNavigationUpdate();
 		}
     }
 
@@ -83,17 +72,26 @@ public class MenuController : MonoBehaviour
 
 	void BeginPlayingMusic()
 	{
-		audioSources[0].Play();
+		musicSource.Play();
 	}
 
 	void PlaySFXTitleCard()
 	{
-		audioSources[1].clip = titleCardSFX;
-		audioSources[1].Play();
+		sfxSource.clip = titleCardSFX;
+		sfxSource.Play();
 	}
 
 	public void Play()
 	{
 		SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
 	}
+
+	public void ShowCredits()
+	{
+		creditsScreen.SetActive(true);
+		creditsScreen.GetComponent<CreditsController>().Init();
+		gameObject.SetActive(false);
+	}
+
+	
 }
