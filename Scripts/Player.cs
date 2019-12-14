@@ -391,6 +391,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 	private bool RemoveFractionOfObtainedComps()
 	{
+		if (maxHealth == 1)
+			return false;
+			
 		int compsToRemove = TotalObtainedComps() / (maxHealth - 1);
 
 		if (compsToRemove == 0)

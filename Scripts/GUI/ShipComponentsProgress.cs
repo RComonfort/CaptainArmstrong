@@ -18,6 +18,7 @@ public class ShipComponentsProgress : MonoBehaviour
 		componentTexts = new Dictionary<EShipComponent, TextMeshProUGUI>();
 
         player = Object.FindObjectOfType<Player>();
+		player.playerBoardedShipEvent += OnPlayerBoardedShip;
 
 		//Get template to use in vertical stack
 		GameObject componentGUI = transform.GetChild(0).gameObject;
@@ -42,6 +43,11 @@ public class ShipComponentsProgress : MonoBehaviour
 		//Clean up existing progress GUI comp
 		Destroy(componentGUI);
     }
+
+	void OnPlayerBoardedShip()
+	{
+		gameObject.SetActive(false);
+	}
 
     void Update()
     {

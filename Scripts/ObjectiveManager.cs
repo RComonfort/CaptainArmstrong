@@ -10,7 +10,6 @@ public class ObjectiveManager : MonoBehaviour
 	[SerializeField] private CinemachineVirtualCamera CMCam;
 	[SerializeField] private TextMeshProUGUI timeIndicator;
 	
-	
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
 	[SerializeField] private Vector2 shipSpawnRangeFromPlayer = new Vector2(30f, 60f);
@@ -115,7 +114,7 @@ public class ObjectiveManager : MonoBehaviour
 
 		player.allowMovementInput = false;
 
-		//TODO: Show Game Over Winning GUI
+		GameOver(true);
 	}
 
 	private void OnPlayerDeath()
@@ -124,7 +123,16 @@ public class ObjectiveManager : MonoBehaviour
 
 		matchState = EMatchState.GameOver_Lose;
 
-		//TODO: Show Game Over losing GUI
+		GameOver(false);
+	}
+
+	private void GameOver(bool playerWon)
+	{
+		string timeTaken = timeIndicator.text;
+		timeIndicator.transform.root.gameObject.SetActive(false); //disable hud UI
+
+		gameOverScreen.SetActive(true);
+		gameOverScreen.GetComponent<GameOverScreen>().Init(playerWon, timeTaken);
 	}
 
 	private void SpawnPrefabCloseToPlayer(GameObject prefab, ref Transform assignTo, Vector2 distRange)
