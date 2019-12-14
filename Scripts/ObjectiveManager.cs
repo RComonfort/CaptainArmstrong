@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using TMPro;
 
 public class ObjectiveManager : MonoBehaviour
 {
 	[SerializeField] private GameObject gameOverScreen;
 	[SerializeField] private CinemachineVirtualCamera CMCam;
+	[SerializeField] private TextMeshProUGUI timeIndicator;
+	
 	
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
@@ -44,6 +47,10 @@ public class ObjectiveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		string minutes = (((int)Time.timeSinceLevelLoad) / 60).ToString();
+		string seconds = (((int)Time.timeSinceLevelLoad) % 60).ToString();
+		timeIndicator.SetText( minutes.PadLeft(2,'0') + ":" + seconds.PadLeft(2,'0'));
+
         switch (matchState)
 		{
 			case EMatchState.RepairingShip: RepairingShipStateUpdate();
