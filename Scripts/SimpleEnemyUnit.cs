@@ -8,6 +8,7 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 	[SerializeField] private GameObject deathFXPrefab;
 	[SerializeField] private int damage = 1;
 	[SerializeField] private float damageCDPerObj = 2f; //The time allowed to an object as not targetable after being damaged by this unit
+	[SerializeField] private float deathDelay = 0f;
 	
 
 	public bool indestructible = false;
@@ -34,9 +35,16 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 		if (isDead || indestructible || cannotBeDamagedBy.Contains(instigator))
 			return false;
 
+		print(gameObject.name + " hit");
+
 		hp = Mathf.Clamp(hp - amount, 0, maxHealth);
 		if (hp == 0)
+		{
 			Die();
+			return true;
+		}
+
+		OnTookDamage();
 
 		return true;
 	}
@@ -53,13 +61,17 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 
 	public void Die()
 	{
+		print(gameObject.name + " death");
+
 		isDead = true;
 
 		//Play FX
 		if (deathFXPrefab)
 			Instantiate(deathFXPrefab, transform.position, Quaternion.identity);
 
-		Destroy(gameObject);
+		OnDeath();
+
+		Destroy(gameObject, deathDelay);
 	}
 
 	public void AddTemporalInvunerability(IDamageDealer forEntity, float duration)
@@ -102,5 +114,15 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 
 			DealDamage(damage, damageableObj);
 		}
+	}
+
+	virtual protected void OnTookDamage()
+	{
+
+	}
+
+	virtual protected void OnDeath()
+	{
+
 	}
 }

@@ -495,6 +495,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		allowMovementInput = false;
 
 		riddenObj.StopBeingRidden();
+		transform.parent = null;
 
 		//TODO: Play Death Animation
 	}
