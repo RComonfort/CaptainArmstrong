@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 8603214721892622225}
   - component: {fileID: 1679929848}
   - component: {fileID: 1679929850}
+  - component: {fileID: 3633358926217457567}
   m_Layer: 0
   m_Name: Astronaut
   m_TagString: Untagged
@@ -93,7 +94,7 @@ Transform:
   m_GameObject: {fileID: 4178770017279555694}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.07, y: 0.79, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 757409972}
   - {fileID: 6089208613375123677}
@@ -138,7 +139,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 5dcda654895002043a015ec05f7f889a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 316cea14356fcdc41adac86031263469, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -164,8 +165,8 @@ MonoBehaviour:
   allowMovementInput: 1
   angleStep: 5
   cometJumpRadius: 7
-  jumpingSpeed: 5
-  maxHealth: 3
+  jumpingSpeed: 15
+  maxHealth: 10
   damageOnContact: 1
   requiredComponents:
   - component: 0
@@ -174,11 +175,11 @@ MonoBehaviour:
       type: 3}
   - component: 1
     amount: 3
-    prefab: {fileID: 3187749197568364839, guid: 8b92b511a14e5fc459502376197b0115,
+    prefab: {fileID: 7899983868092376628, guid: 084e2d9421b0fa54daae66307ae1dcfc,
       type: 3}
   - component: 2
     amount: 3
-    prefab: {fileID: 1565320888453875278, guid: f73787fd948015d419671133106e9f25,
+    prefab: {fileID: 7899983868092376628, guid: 084e2d9421b0fa54daae66307ae1dcfc,
       type: 3}
   canBeDamaged: 1
   playerState: 0
@@ -236,7 +237,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.27, y: 1.55}
+    oldSize: {x: 1.8, y: 1.8}
     newSize: {x: 1.27, y: 1.55}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -341,6 +342,25 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!95 &3633358926217457567
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178770017279555694}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cebc392bbff080c40af6cec95531509a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8731741534739431322
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,8 +447,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11400006, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
+    - target: {fileID: 19800006, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800004, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
 --- !u!4 &2599317835464842162 stripped
 Transform:
