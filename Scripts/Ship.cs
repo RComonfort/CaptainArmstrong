@@ -9,18 +9,21 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
     private Player player;
 	[SerializeField] private Sprite fixedShipSprite;
 	[SerializeField] private GameObject shipDestroyedFX;
+	[SerializeField] private GameObject shipBoardedFX;
 	
 	
 	private Sprite destroyedShipSprite;
 	private ForwardMovementComponent movementComponent;
 	private SpriteRenderer spriteRenderer;
 	private BoxCollider2D collision; 
+	private AudioSource shipNoise;
 
 	protected void Start() {
 
 		movementComponent = GetComponent<ForwardMovementComponent>();
 		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		collision = GetComponent<BoxCollider2D>();
+		shipNoise = GetComponent<AudioSource>();
 	}
 
 	public void GetsRidden(Player by)
@@ -29,12 +32,19 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 		movementComponent.enabled = true;
 		destroyedShipSprite = spriteRenderer.sprite;
 		spriteRenderer.sprite = fixedShipSprite;
+
+		if (shipBoardedFX)
+			Instantiate(shipBoardedFX, transform.position, Quaternion.identity);
+
+		shipNoise.Play();
 	}
 
 	public void StopBeingRidden()
 	{
 		player = null;
 		CancelRotation();
+
+		shipNoise.Stop();
 
 		if (shipDestroyedFX)
 			Instantiate(shipDestroyedFX, transform.position, Quaternion.identity);
@@ -86,7 +96,7 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 
 	public void DealDamage(int amount, IDamageable entity)
 	{
-		
+
 	}
 
 	public bool HealDamage(int amount)

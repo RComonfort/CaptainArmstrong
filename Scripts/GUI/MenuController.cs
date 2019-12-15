@@ -40,6 +40,9 @@ public class MenuController : MenuScriptParent
         if (introReady && !inMenu && Input.GetAxisRaw("Action1") > .2f && Input.GetAxisRaw("Action2") > .2f)
 		{
 			InitiateMenu();
+
+			PlaySFX(buttonClickClip);
+
 			lastInputPress = Time.timeSinceLevelLoad;
 
 		}

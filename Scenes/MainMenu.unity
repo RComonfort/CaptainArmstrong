@@ -1309,10 +1309,10 @@ MonoBehaviour:
   normalButton: {fileID: 21300000, guid: 468a54eba6ff7684b8b72a047a1625a1, type: 3}
   pressedButton: {fileID: 21300000, guid: 8a95ac0d3777fe648916033b24147290, type: 3}
   hoveredButton: {fileID: 21300000, guid: 1e22cab20e60f6c4b9ab7fc91ca4ce24, type: 3}
-  buttonClickClip: {fileID: 0}
-  buttonHovered: {fileID: 0}
+  buttonClickClip: {fileID: 8300000, guid: 8501742fb4be9a44d8d212e3e46e9841, type: 3}
+  buttonHoveredClip: {fileID: 8300000, guid: 6b2f915d409a5ba41879a851d8611edf, type: 3}
   sfxSource: {fileID: 781295459}
-  titleCardSFX: {fileID: 0}
+  titleCardSFX: {fileID: 8300000, guid: 6370e9f5af22b5f40adc21d4b3bdeb59, type: 3}
   musicSource: {fileID: 781295460}
   creditsScreen: {fileID: 1686587943}
 --- !u!1 &1529570432
@@ -1735,8 +1735,8 @@ MonoBehaviour:
   normalButton: {fileID: 21300000, guid: 468a54eba6ff7684b8b72a047a1625a1, type: 3}
   pressedButton: {fileID: 21300000, guid: 8a95ac0d3777fe648916033b24147290, type: 3}
   hoveredButton: {fileID: 21300000, guid: 1e22cab20e60f6c4b9ab7fc91ca4ce24, type: 3}
-  buttonClickClip: {fileID: 0}
-  buttonHovered: {fileID: 0}
+  buttonClickClip: {fileID: 8300000, guid: 8501742fb4be9a44d8d212e3e46e9841, type: 3}
+  buttonHoveredClip: {fileID: 8300000, guid: 6b2f915d409a5ba41879a851d8611edf, type: 3}
   sfxSource: {fileID: 781295459}
   mainMenu: {fileID: 1188038895}
 --- !u!114 &1686587945

@@ -7,6 +7,7 @@ public class Comet : SimpleEnemyUnit, IRideable
 	[SerializeField] private Player player;
 
 	private Collider2D hitbox;
+	private AudioSource cometAudio;
 	private ForwardMovementComponent movementComponent;
 
 	protected override void Start() {
@@ -14,6 +15,7 @@ public class Comet : SimpleEnemyUnit, IRideable
 
 		hitbox = GetComponent<Collider2D>();
 		movementComponent = GetComponent<ForwardMovementComponent>();
+		cometAudio = GetComponentInChildren<AudioSource>();
 	}
 
 	public void GetsRidden(Player by)
@@ -21,6 +23,7 @@ public class Comet : SimpleEnemyUnit, IRideable
 		player = by;
 		gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
 		indestructible = true;
+		cometAudio.Play();
 	}
 
 	public void StopBeingRidden()
@@ -32,6 +35,8 @@ public class Comet : SimpleEnemyUnit, IRideable
 		CancelRotation();
 		indestructible = false;
 		gameObject.layer = LayerMask.NameToLayer("Default");
+
+		cometAudio.Stop();
 
 		player = null;
 	}

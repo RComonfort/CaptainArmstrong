@@ -94,7 +94,7 @@ Transform:
   m_GameObject: {fileID: 4178770017279555694}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.07, y: 0.79, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 757409972}
   - {fileID: 6089208613375123677}
@@ -166,7 +166,7 @@ MonoBehaviour:
   angleStep: 5
   cometJumpRadius: 7
   jumpingSpeed: 15
-  maxHealth: 10
+  maxHealth: 5
   damageOnContact: 1
   requiredComponents:
   - component: 0
@@ -175,11 +175,11 @@ MonoBehaviour:
       type: 3}
   - component: 1
     amount: 3
-    prefab: {fileID: 7899983868092376628, guid: 084e2d9421b0fa54daae66307ae1dcfc,
+    prefab: {fileID: 3187749197568364839, guid: 8b92b511a14e5fc459502376197b0115,
       type: 3}
   - component: 2
     amount: 3
-    prefab: {fileID: 7899983868092376628, guid: 084e2d9421b0fa54daae66307ae1dcfc,
+    prefab: {fileID: 1565320888453875278, guid: f73787fd948015d419671133106e9f25,
       type: 3}
   canBeDamaged: 1
   playerState: 0
@@ -233,7 +233,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.00000023841858, y: -0.09811756}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -244,7 +244,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.27, y: 1.55}
+  m_Size: {x: 0.7347176, y: 1.5476964}
   m_EdgeRadius: 0
 --- !u!120 &1679929850
 LineRenderer:
@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
       propertyPath: m_LocalPosition.z
@@ -463,7 +463,8 @@ PrefabInstance:
       propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400006, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bcaff8fc36e95584bb27cc3cf7c6cb14, type: 3}
 --- !u!4 &2599317835464842162 stripped
 Transform:

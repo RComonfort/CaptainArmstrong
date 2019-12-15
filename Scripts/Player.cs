@@ -51,6 +51,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	private HashSet<IDamageDealer> cannotBeDamagedBy;
 	private ParticleSystem lostHealthPS;
 	private Animator animator;
+	private AudioSource damageAudio;
 
 
 	#region MonoBehaviourMethods
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		nearestCometLine = GetComponent<LineRenderer>();
 		lostHealthPS = GetComponentInChildren<ParticleSystem>();
 		animator = GetComponent<Animator>();
+		damageAudio = GetComponentInChildren<AudioSource>();
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
@@ -482,6 +484,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		{
 			hp = Mathf.Clamp(hp - amount, 0, maxHealth);
 
+			//Play hurt FX
+			lostHealthPS.Clear(true);
+			lostHealthPS.Play(true);
+
 			if (hp == 0)
 			{
 				Die();
@@ -489,13 +495,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 			}
 		}
 
-		//Play hurt animation
+		//Play hurt animation and sound
 		if (playerState != EPlayerState.OnSpaceShip)
+		{
 			animator.SetTrigger("hit");
-
-		//Play hurt FX
-		lostHealthPS.Clear(true);
-		lostHealthPS.Play(true);
+			damageAudio.Play();
+		}
 
 		return true;
 	}

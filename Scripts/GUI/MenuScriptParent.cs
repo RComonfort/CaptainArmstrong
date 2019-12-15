@@ -13,7 +13,7 @@ public class MenuScriptParent : MonoBehaviour
 
 	[Header("Button SFX")]
 	[SerializeField] protected AudioClip buttonClickClip;
-	[SerializeField] protected AudioClip buttonHovered;
+	[SerializeField] protected AudioClip buttonHoveredClip;
 
 	[Header("SFX")]
 	[SerializeField] protected AudioSource sfxSource;
@@ -83,15 +83,25 @@ public class MenuScriptParent : MonoBehaviour
 		ExecuteEvents.Execute(buttons[buttonIndex].gameObject, pointer, ExecuteEvents.submitHandler);
 
 		buttonImages[buttonIndex].sprite = pressedButton;
+
+		PlaySFX(buttonClickClip);
 	}
 
 	protected void HoverButton(int buttonIndex)
 	{
 		buttonImages[buttonIndex].sprite = hoveredButton;
+
+		PlaySFX(buttonHoveredClip);
 	}
 
 	protected void UnhoverButton(int buttonIndex)
 	{
 		buttonImages[buttonIndex].sprite = normalButton;
+	}
+
+	protected void PlaySFX(AudioClip clip)
+	{
+		sfxSource.clip = clip;
+		sfxSource.Play();
 	}
 }
