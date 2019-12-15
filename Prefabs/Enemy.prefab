@@ -206,4 +206,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyBy: 0
-  lifetime: 30
+  lifetime: 20

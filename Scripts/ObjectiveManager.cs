@@ -6,7 +6,7 @@ using TMPro;
 
 public class ObjectiveManager : MonoBehaviour
 {
-	[SerializeField] private GameObject gameOverScreen;
+	[Header("SceneRefs")]
 	[SerializeField] private CinemachineVirtualCamera CMCam;
 	[SerializeField] private TextMeshProUGUI timeIndicator;
 	
@@ -18,6 +18,13 @@ public class ObjectiveManager : MonoBehaviour
 	[Header("Ship Phase")]
 	[SerializeField] private GameObject shipPhaseSpawners;
 	[SerializeField] private GameObject finalDestinationPrefab;	
+
+	[Header("Game Over")]
+	[SerializeField] private GameObject gameOverScreen;
+	[SerializeField] private AudioClip losingClip;
+	[SerializeField] private AudioClip winningClip;
+	[SerializeField] private AudioSource levelMusicSource;
+	
 
 	private EMatchState matchState = EMatchState.RepairingShip;
 	private Player player;
@@ -133,10 +140,15 @@ public class ObjectiveManager : MonoBehaviour
 		shipPhaseSpawners.SetActive(false);
 		cometPhaseSpawners.SetActive(false);
 
-		CMCam.Follow = null;
-
 		string timeTaken = timeIndicator.text;
 		timeIndicator.transform.root.gameObject.SetActive(false); //disable hud UI
+
+		//Play game over SFX
+		AudioSource source = gameObject.AddComponent<AudioSource>();
+		source.clip = playerWon ? winningClip : losingClip;
+		source.Play();
+
+		levelMusicSource.volume = levelMusicSource.volume / 2;
 
 		gameOverScreen.SetActive(true);
 		gameOverScreen.GetComponent<GameOverScreen>().Init(playerWon, timeTaken);
