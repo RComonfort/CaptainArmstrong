@@ -484,6 +484,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 		//TODO: Play hurt animation
 
+		lostHealthPS.Clear(true);
+		lostHealthPS.Play(true);
+
 		return true;
 	}
 
@@ -499,12 +502,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		riddenObj.StopBeingRidden();
 		transform.parent = null;
 
-		//TODO: Play Death Animation
-
-		if (lostHealthPS)
-		{
-			lostHealthPS.Simulate(0, true, true);
-		}
+		//TODO: Play Death Animation			
 	}
 
 	public void DealDamage(int amount, IDamageable entity)

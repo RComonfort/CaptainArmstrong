@@ -73,21 +73,27 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 
 	public bool TakeDamage(int amount, IDamageDealer instigator)
 	{
+		if (!player)
+			return false;
+			
 		return player.TakeDamage(amount, instigator);
 	}
 
 	public void Die()
 	{
-		player.Die();
+
 	}
 
 	public void DealDamage(int amount, IDamageable entity)
 	{
-		player.TakeDamage(amount, this);
+		
 	}
 
 	public bool HealDamage(int amount)
 	{
+		if (!player)
+			return false;
+
 		return player.HealDamage(amount);
 	}
 

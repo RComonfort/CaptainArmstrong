@@ -29,6 +29,9 @@ public class Enemy : SimpleEnemyUnit
 
 		gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
 		animator.SetTrigger("die");
+
+		if (leftoverPrefab)
+			Instantiate(leftoverPrefab, transform.position, Quaternion.identity);
 	}
 
 }

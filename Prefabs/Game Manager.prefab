@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 4184487461960211873}
   - component: {fileID: 4184487461960211872}
   - component: {fileID: 2056201874}
+  - component: {fileID: 439749428}
   m_Layer: 0
-  m_Name: Screen Spawner
+  m_Name: Comet Phase Spaws
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,6 +151,25 @@ MonoBehaviour:
   spawnAmount: 1
   firstWaveDelay: 0
   orientToScreenCenter: 0
+--- !u!114 &439749428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184487461960211874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 2033173056754890156, guid: 0000c99ebe483ae4b9b151307f10c249,
+    type: 3}
+  spawnTime: 5
+  delayBetweenSpawns: 0
+  spawnAmount: 2
+  firstWaveDelay: 0
+  orientToScreenCenter: 0
 --- !u!1 &4184487462067310705
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +180,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4184487462067310702}
   - component: {fileID: 761032272}
-  - component: {fileID: 761032273}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -180,6 +199,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4184487461960211875}
+  - {fileID: 9208562757962602055}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -195,22 +215,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5b2c335cd9ef046bea1fc70c87d97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectiveSqrDistTreshhold: 1
   gameOverScreen: {fileID: 0}
+  CMCam: {fileID: 0}
+  timeIndicator: {fileID: 0}
   shipPrefab: {fileID: 4985358919303150810, guid: 106446f2bfec0ad4bbcc796040dedf71,
     type: 3}
-  shipSpawnDistFromPlayer: 60
-  blackHoleSpawner: {fileID: 761032273}
+  shipSpawnRangeFromPlayer: {x: 30, y: 60}
+  cometPhaseSpawners: {fileID: 4184487461960211874}
+  shipPhaseSpawners: {fileID: 7761179933966656149}
   finalDestinationPrefab: {fileID: 8088549522680793313, guid: f4e8da27e26e1ca4e8dc964d7b0fa67e,
     type: 3}
---- !u!114 &761032273
+--- !u!1 &7761179933966656149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9208562757962602055}
+  - component: {fileID: 5851399881231885769}
+  m_Layer: 0
+  m_Name: Ship Phase Screen Spawns
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &9208562757962602055
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7761179933966656149}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4184487462067310702}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5851399881231885769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4184487462067310705}
-  m_Enabled: 0
+  m_GameObject: {fileID: 7761179933966656149}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7edafce64eb04c4fa91c74908ad0395, type: 3}
   m_Name: 
@@ -221,4 +274,4 @@ MonoBehaviour:
   delayBetweenSpawns: 1
   spawnAmount: 5
   firstWaveDelay: 1
-  orientToScreenCenter: 1
+  orientToScreenCenter: 0

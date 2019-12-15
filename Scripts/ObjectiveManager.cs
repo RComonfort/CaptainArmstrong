@@ -13,9 +13,10 @@ public class ObjectiveManager : MonoBehaviour
 	[Header("Comet Riding Phase")]
 	[SerializeField] private GameObject shipPrefab;
 	[SerializeField] private Vector2 shipSpawnRangeFromPlayer = new Vector2(30f, 60f);
+	[SerializeField] private GameObject cometPhaseSpawners;
 	
 	[Header("Ship Phase")]
-	[SerializeField] private ScreenEdgeSpawner blackHoleSpawner;
+	[SerializeField] private GameObject shipPhaseSpawners;
 	[SerializeField] private GameObject finalDestinationPrefab;	
 
 	private EMatchState matchState = EMatchState.RepairingShip;
@@ -23,7 +24,7 @@ public class ObjectiveManager : MonoBehaviour
 	private GoalIndicator goalIndicator;
 	private Transform ship;
 	private Transform finalDest;
-	private ScreenEdgeSpawner[] spawners;
+	
 
 	private int neededParts;
 
@@ -40,7 +41,6 @@ public class ObjectiveManager : MonoBehaviour
 		goalIndicator = player.GetComponent<GoalIndicator>();
 		neededParts = player.TotalNeededComps();
 
-		spawners = GetComponentsInChildren<ScreenEdgeSpawner>();
     }
 
     // Update is called once per frame
@@ -93,11 +93,10 @@ public class ObjectiveManager : MonoBehaviour
 		//Player reached ship
 		matchState = EMatchState.Escaping;
 
-		//Turn off all spawning
-		foreach (ScreenEdgeSpawner s in spawners)
-			s.enabled = false;
-		//Enable spawning of blackholes
-		blackHoleSpawner.enabled = true;
+		//Turn off all comet-phase spawning and enabled ship-phase's
+		cometPhaseSpawners.SetActive(false);
+		shipPhaseSpawners.SetActive(true);
+		
 
 		//TODO: ZoomOut camera
 		StartCoroutine(ZoomOutCam(10, 1));
