@@ -49,6 +49,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	private Dictionary<EShipComponent, int> obtainedComps;
 	private Dictionary<EShipComponent, int> neededComps;
 	private HashSet<IDamageDealer> cannotBeDamagedBy;
+	private ParticleSystem lostHealthPS;
 
 
 	#region MonoBehaviourMethods
@@ -81,6 +82,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		riddenObj.GetsRidden(this);
 		
 		nearestCometLine = GetComponent<LineRenderer>();
+		lostHealthPS = GetComponentInChildren<ParticleSystem>();
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
@@ -498,6 +500,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		transform.parent = null;
 
 		//TODO: Play Death Animation
+
+		if (lostHealthPS)
+		{
+			lostHealthPS.Simulate(0, true, true);
+		}
 	}
 
 	public void DealDamage(int amount, IDamageable entity)

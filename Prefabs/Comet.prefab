@@ -100,9 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
-  deathFXPrefab: {fileID: 0}
   damage: 1
   damageCDPerObj: 2
+  damageFX: {fileID: 0}
+  deathDelay: 0
+  deathFXPrefab: {fileID: 3671196711466125434, guid: 3a2458d2a021f4340a4f70cc7687e8c5,
+    type: 3}
   indestructible: 0
   player: {fileID: 0}
 --- !u!114 &4798252958541085130

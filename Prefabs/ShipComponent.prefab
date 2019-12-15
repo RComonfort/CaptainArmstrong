@@ -129,7 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  pickupFXPrefab: {fileID: 0}
+  pickupFXPrefab: {fileID: 8226996946603236655, guid: e57686fe8e94d954aa70c5cd46c0ee96,
+    type: 3}
 --- !u!50 &9219237330646051387
 Rigidbody2D:
   serializedVersion: 4

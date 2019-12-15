@@ -86,6 +86,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixedShipSprite: {fileID: 21300000, guid: 4dd0835565d34384e835a8101a0a8749, type: 3}
+  shipDestroyedFX: {fileID: 5320315245420977231, guid: 325f0a76fe912ea499f9c6cb168ace19,
+    type: 3}
 --- !u!61 &2341980909704739216
 BoxCollider2D:
   m_ObjectHideFlags: 0

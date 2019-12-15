@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2033173056754890152}
   - component: {fileID: 2033173056754890150}
   - component: {fileID: 2033173056754890151}
+  - component: {fileID: 5746100583646652974}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -130,11 +131,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  deathFXPrefab: {fileID: 0}
   damage: 1
   damageCDPerObj: 2
+  damageFX: {fileID: 4562965249618530747, guid: 68881120152d58041a26b7a87357d0e4,
+    type: 3}
   deathDelay: 3
+  deathFXPrefab: {fileID: 5224212883020028635, guid: 682012e76875bf440bbd7e4fd685c9a2,
+    type: 3}
   indestructible: 0
+  leftoverPrefab: {fileID: 3903370287712464628, guid: 4373263a8a47f1a4d9b56e456912a48f,
+    type: 3}
 --- !u!61 &2033173056754890150
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -187,3 +193,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.17, y: 0.76}
   m_EdgeRadius: 0
+--- !u!114 &5746100583646652974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033173056754890156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c929746004d20ce43bda0056149d4af2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyBy: 0
+  lifetime: 30

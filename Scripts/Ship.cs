@@ -8,6 +8,8 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 {
     private Player player;
 	[SerializeField] private Sprite fixedShipSprite;
+	[SerializeField] private GameObject shipDestroyedFX;
+	
 	
 	private Sprite destroyedShipSprite;
 	private ForwardMovementComponent movementComponent;
@@ -33,6 +35,10 @@ public class Ship : MonoBehaviour, IRideable, IDamageable, IDamageDealer
 	{
 		player = null;
 		CancelRotation();
+
+		if (shipDestroyedFX)
+			Instantiate(shipDestroyedFX, transform.position, Quaternion.identity);
+
 		spriteRenderer.sprite = destroyedShipSprite;
 	}
 

@@ -135,7 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healingAmount: 1
   initialMoveForce: 5
-  pickupFXPrefab: {fileID: 0}
+  pickupFXPrefab: {fileID: 8616910866594376700, guid: 6807da172998ccd44bc22d96c90435e5,
+    type: 3}
 --- !u!114 &5201248120128091603
 MonoBehaviour:
   m_ObjectHideFlags: 0

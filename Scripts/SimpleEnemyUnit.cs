@@ -5,10 +5,14 @@ using UnityEngine;
 public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 {
 	[SerializeField] private int maxHealth = 1;
-	[SerializeField] private GameObject deathFXPrefab;
 	[SerializeField] private int damage = 1;
 	[SerializeField] private float damageCDPerObj = 2f; //The time allowed to an object as not targetable after being damaged by this unit
+	[SerializeField] private GameObject damageFX;
+
+	[Header("Death")]
 	[SerializeField] private float deathDelay = 0f;
+	[SerializeField] private GameObject deathFXPrefab;
+
 	
 
 	public bool indestructible = false;
@@ -35,14 +39,15 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 		if (isDead || indestructible || cannotBeDamagedBy.Contains(instigator))
 			return false;
 
-		print(gameObject.name + " hit");
-
 		hp = Mathf.Clamp(hp - amount, 0, maxHealth);
 		if (hp == 0)
 		{
 			Die();
 			return true;
 		}
+
+		if (damageFX)
+			Instantiate(damageFX, transform.position, Quaternion.identity);
 
 		OnTookDamage();
 
@@ -61,8 +66,6 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 
 	public void Die()
 	{
-		print(gameObject.name + " death");
-
 		isDead = true;
 
 		//Play FX

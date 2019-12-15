@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : SimpleEnemyUnit
 {
+	[Header("Enemy")]
+	[SerializeField] private GameObject leftoverPrefab; //Prefab that is spawned after the enemy dies
+
 	private Animator animator;
 	private MoveTowardsPlayer movement; 
 
