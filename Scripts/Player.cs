@@ -50,6 +50,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	private Dictionary<EShipComponent, int> neededComps;
 	private HashSet<IDamageDealer> cannotBeDamagedBy;
 	private ParticleSystem lostHealthPS;
+	private Animator animator;
 
 
 	#region MonoBehaviourMethods
@@ -83,6 +84,7 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		
 		nearestCometLine = GetComponent<LineRenderer>();
 		lostHealthPS = GetComponentInChildren<ParticleSystem>();
+		animator = GetComponent<Animator>();
 
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
@@ -194,10 +196,10 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		riddenObj = null;
 		transform.parent = null;
 
-		//print("Jumping from " + gameObject.name + " to "+ nearestComet.name +",PS: " + playerState + ", nearByC: " + nearbyComets.ToString());
-
 		//Set state to jumping and start jumping process
 		playerState = EPlayerState.Jumping;
+
+		animator.SetBool("isJumping", true);
 		
 		StartCoroutine(JumpingRoutine(nearestComet));
 	}
@@ -215,12 +217,17 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		while (Vector3.SqrMagnitude(transform.position - target.position) > .5f)
 		{
 			transform.position = Vector3.MoveTowards(transform.position, target.position, jumpingSpeed * Time.deltaTime);
+			Vector3 dir = (target.position - transform.position).normalized;
+			Quaternion rot = Quaternion.LookRotation(Vector3.forward, Vector3.Cross(Vector3.forward, dir));
+			transform.rotation = rot;
 			yield return null;
 		}
 
 		//New comet reached, update player state
 		playerState = EPlayerState.OnComet;
 		transform.SetParent(target);
+
+		animator.SetBool("isJumping", false);
 
 		//Apply offsets
 		transform.localPosition = initialPosOffset;
@@ -482,8 +489,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 			}
 		}
 
-		//TODO: Play hurt animation
+		//Play hurt animation
+		if (playerState != EPlayerState.OnSpaceShip)
+			animator.SetTrigger("hit");
 
+		//Play hurt FX
 		lostHealthPS.Clear(true);
 		lostHealthPS.Play(true);
 
@@ -502,7 +512,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		riddenObj.StopBeingRidden();
 		transform.parent = null;
 
-		//TODO: Play Death Animation			
+		//Play Death Animation
+		animator.SetTrigger("die");	
+
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+		rb.bodyType = RigidbodyType2D.Dynamic;
+		rb.velocity	= (riddenObj as Component).GetComponent<Rigidbody2D>().velocity;	
 	}
 
 	public void DealDamage(int amount, IDamageable entity)

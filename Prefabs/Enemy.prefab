@@ -135,7 +135,7 @@ MonoBehaviour:
   damageCDPerObj: 2
   damageFX: {fileID: 4562965249618530747, guid: 68881120152d58041a26b7a87357d0e4,
     type: 3}
-  deathDelay: 3
+  deathDelay: 1
   deathFXPrefab: {fileID: 5224212883020028635, guid: 682012e76875bf440bbd7e4fd685c9a2,
     type: 3}
   indestructible: 0

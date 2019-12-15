@@ -127,6 +127,11 @@ public class ObjectiveManager : MonoBehaviour
 
 	private void GameOver(bool playerWon)
 	{
+		shipPhaseSpawners.SetActive(false);
+		cometPhaseSpawners.SetActive(false);
+
+		CMCam.Follow = null;
+
 		string timeTaken = timeIndicator.text;
 		timeIndicator.transform.root.gameObject.SetActive(false); //disable hud UI
 

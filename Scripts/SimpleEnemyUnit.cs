@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 {
-	[SerializeField] private int maxHealth = 1;
-	[SerializeField] private int damage = 1;
+	[SerializeField] protected int maxHealth = 1;
+	[SerializeField] protected int damage = 1;
 	[SerializeField] private float damageCDPerObj = 2f; //The time allowed to an object as not targetable after being damaged by this unit
 	[SerializeField] private GameObject damageFX;
 
 	[Header("Death")]
-	[SerializeField] private float deathDelay = 0f;
+	[SerializeField] protected float deathDelay = 0f;
 	[SerializeField] private GameObject deathFXPrefab;
-
-	
 
 	public bool indestructible = false;
 	private bool isDead = false;

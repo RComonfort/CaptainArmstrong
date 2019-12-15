@@ -30,6 +30,11 @@ public class Enemy : SimpleEnemyUnit
 		gameObject.layer = LayerMask.NameToLayer("IgnoreCollisions");
 		animator.SetTrigger("die");
 
+		Invoke("SpawnPrefabOnDeath", deathDelay);		
+	}
+
+	void SpawnPrefabOnDeath()
+	{
 		if (leftoverPrefab)
 			Instantiate(leftoverPrefab, transform.position, Quaternion.identity);
 	}

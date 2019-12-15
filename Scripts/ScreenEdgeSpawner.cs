@@ -25,6 +25,11 @@ public class ScreenEdgeSpawner : MonoBehaviour
         InvokeRepeating("SpawnWave", firstWaveDelay, spawnTime);
     }
 
+	private void OnDisable() {
+		StopAllCoroutines();
+		CancelInvoke();
+	}
+
     private void SpawnWave()
 	{
 		StartCoroutine(SpawnWaveRoutine());
