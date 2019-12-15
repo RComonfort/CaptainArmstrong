@@ -10,9 +10,9 @@ public class Enemy : SimpleEnemyUnit
 	private Animator animator;
 	private MoveTowardsPlayer movement; 
 
-	protected override void Start()
+	protected override void Awake()
 	{
-		base.Start();
+		base.Awake();
 
 		movement = GetComponent<MoveTowardsPlayer>();
 		animator = GetComponent<Animator>();

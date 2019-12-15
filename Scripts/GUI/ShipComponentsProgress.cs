@@ -47,6 +47,8 @@ public class ShipComponentsProgress : MonoBehaviour
 	void OnPlayerBoardedShip()
 	{
 		gameObject.SetActive(false);
+
+		player.playerBoardedShipEvent -= OnPlayerBoardedShip;
 	}
 
     void Update()

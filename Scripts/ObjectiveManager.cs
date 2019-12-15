@@ -97,8 +97,9 @@ public class ObjectiveManager : MonoBehaviour
 		cometPhaseSpawners.SetActive(false);
 		shipPhaseSpawners.SetActive(true);
 		
+		player.playerBoardedShipEvent -= OnPlayerBoardedShip;
 
-		//TODO: ZoomOut camera
+		//ZoomOut camera
 		StartCoroutine(ZoomOutCam(10, 1));
 
 		//Spawn final destination
@@ -110,6 +111,8 @@ public class ObjectiveManager : MonoBehaviour
 	private void OnPlayerEscaped()
 	{
 		matchState = EMatchState.GameOver_Win;
+
+		player.playerReachedExitEvent -= OnPlayerEscaped;
 
 		player.allowMovementInput = false;
 

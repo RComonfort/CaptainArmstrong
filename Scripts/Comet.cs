@@ -10,12 +10,14 @@ public class Comet : SimpleEnemyUnit, IRideable
 	private AudioSource cometAudio;
 	private ForwardMovementComponent movementComponent;
 
-	protected override void Start() {
-		base.Start();
+
+	protected override void Awake() {
+		base.Awake();
 
 		hitbox = GetComponent<Collider2D>();
 		movementComponent = GetComponent<ForwardMovementComponent>();
 		cometAudio = GetComponentInChildren<AudioSource>();
+
 	}
 
 	public void GetsRidden(Player by)
@@ -30,7 +32,7 @@ public class Comet : SimpleEnemyUnit, IRideable
 	{
 		AddTemporalInvunerability(player, 1f);
 
-		player.AddTemporalInvunerability(this, 1f);
+		player?.AddTemporalInvunerability(this, 1f);
 
 		CancelRotation();
 		indestructible = false;

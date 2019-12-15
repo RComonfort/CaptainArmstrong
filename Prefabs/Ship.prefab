@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4985358919303150810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1032d725995e445824ce9578f78935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementForce: 70000
+  movementForce: 80000
   torque: 20
   maxVelocityMagnitude: 2500
   turnSpeed: 72

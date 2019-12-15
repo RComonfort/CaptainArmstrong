@@ -75,6 +75,12 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 
 		initialPosOffset = transform.localPosition;
 		initialRotOffset = transform.localRotation;
+
+		//Get components references
+		nearestCometLine = GetComponent<LineRenderer>();
+		lostHealthPS = GetComponentInChildren<ParticleSystem>();
+		animator = GetComponent<Animator>();
+		damageAudio = GetComponentInChildren<AudioSource>();
 	}
 
 	// Start is called before the first frame update
@@ -83,11 +89,6 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		riddenObj = GetComponentInParent<IRideable>();
 		riddenObj.GetsRidden(this);
 		
-		nearestCometLine = GetComponent<LineRenderer>();
-		lostHealthPS = GetComponentInChildren<ParticleSystem>();
-		animator = GetComponent<Animator>();
-		damageAudio = GetComponentInChildren<AudioSource>();
-
 		CircleCollider2D DetectionTrigger = GetComponentInChildren<Trigger2DRelay>()?.triggerCollider as CircleCollider2D;
 		DetectionTrigger.radius = cometJumpRadius;
 	}
@@ -204,6 +205,11 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 		animator.SetBool("isJumping", true);
 		
 		StartCoroutine(JumpingRoutine(nearestComet));
+	}
+
+	private void OnDestroy() {
+		StopAllCoroutines();
+		CancelInvoke();
 	}
 
 	private IEnumerator JumpingRoutine(Comet cometTarget)
@@ -434,6 +440,9 @@ public class Player : MonoBehaviour, ITriggerListener, IDamageable, IDamageDeale
 	//Adds 1 to the type of spaceship component. Returns true if it was added and false if player is already maxed out.
 	public bool AddSpaceshipComponent(EShipComponent type)
 	{
+		if (!obtainedComps.ContainsKey(type))
+			return false;
+
 		if (obtainedComps[type] == neededComps[type])
 			return false;
 

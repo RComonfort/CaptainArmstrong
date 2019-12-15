@@ -11,5 +11,7 @@ public class Planet : MonoBehaviour
     void Start()
     {
 		GetComponent<SpriteRenderer>().sprite = planetSprites[Random.Range(0, planetSprites.Length)];
+
+		transform.localScale *= Random.Range(0.5f, 1.3f);
     }
 }

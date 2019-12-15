@@ -19,7 +19,7 @@ public class SimpleEnemyUnit : MonoBehaviour, IDamageable, IDamageDealer
 	private Dictionary<IDamageable, float> invulnerableObjects;
 	private HashSet<IDamageDealer> cannotBeDamagedBy;
 
-	protected virtual void Start() 
+	protected virtual void Awake() 
 	{
 		hp = maxHealth;
 		invulnerableObjects = new Dictionary<IDamageable, float>();
